@@ -1,5 +1,5 @@
-/* Style général pour les grands écrans (PC) */
-body {
+/* Style général pour l'index (sans fond noir) */
+body.index {
   margin: 0;
   padding: 0;
   background: url('./assets/retro-buildings.png') no-repeat center center;
@@ -12,107 +12,18 @@ body {
   color: #00ff00;
 }
 
-.container {
-  text-align: center;
-}
-
-.enter-button {
-  font-size: 2rem; /* Taille de texte pour grand écran */
-  padding: 20px 40px;
-  background-color: black;
-  color: #00ff00;
-  border: 2px solid #00ff00;
-  border-radius: 5px;
-  text-decoration: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  box-shadow: 0 0 10px #00ff00;
-  position: absolute;
-  bottom: 10%;
-  left: 35%;
-  transform: translateX(-50%);
-}
-
-.enter-button:hover {
-  background-color: #00ff00;
-  color: black;
-  box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
-}
-
-/* Lecteur Spotify en haut à gauche */
-.spotify-player {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 999;
-  width: 300px;
-  height: 80px;
-}
-
-/* Media query pour les écrans de tablettes (max-width: 1024px) */
-@media screen and (max-width: 1024px) {
-  .enter-button {
-    font-size: 1.8rem; /* Réduire la taille du bouton sur les tablettes */
-    padding: 15px 30px;
-    position: absolute;
-    bottom: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .spotify-player {
-    width: 250px;
-    height: 60px;
-  }
-}
-
-/* Media query pour les écrans de téléphone (max-width: 768px) */
-@media screen and (max-width: 768px) {
-  body {
-    font-size: 1rem; /* Ajuster la taille du texte sur mobile */
-  }
-
-  .enter-button {
-    font-size: 1.2rem; /* Réduire encore la taille des boutons */
-    padding: 10px 20px;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .spotify-player {
-    width: 200px;
-    height: 60px; /* Ajuster le lecteur pour les petits écrans */
-  }
-}
-
-/* Media query pour les très petits écrans (par exemple, téléphones en mode portrait) */
-@media screen and (max-width: 480px) {
-  .enter-button {
-    font-size: 1rem;
-    padding: 8px 15px;
-  }
-
-  .spotify-player {
-    width: 180px;
-    height: 50px;
-  }
-}
-
-/* Style général pour les pages avec fond noir */
-
-body {
+/* Style général pour toutes les autres pages (fond noir) */
+body:not(.index) {
   margin: 0;
   padding: 0;
-  background-color: black; /* Fond noir sur toutes les pages */
+  background-color: black; /* Fond noir pour toutes les pages sauf l'index */
   color: #00ff00;
-  font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
+  font-family: 'Press Start 2P', cursive;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   flex-direction: column;
-  position: relative;
 }
 
 /* Styles de base pour les autres éléments de la page */
@@ -143,7 +54,6 @@ h1, p {
   box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
 }
 
-/* Footer text */
 .corp-text {
   position: absolute;
   bottom: 5%;
