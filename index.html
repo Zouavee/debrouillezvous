@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entrez dans la matrice</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Intégration de la police rétro pixelisée (Press Start 2P) -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -36,7 +38,7 @@
       box-shadow: 0 0 10px #00ff00;
       position: absolute;
       bottom: 10%;
-      left: 35%;
+      left: 30%;
     }
 
     .enter-button:hover {
@@ -44,11 +46,55 @@
       color: black;
       box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
     }
+
+    /* Transition style : effet extinction de télé, invisible au départ */
+    .transition-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      visibility: hidden;  /* Initialement invisible */
+      animation: none;
+    }
+
+    @keyframes flickerEffect {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      100% {
+        opacity: 1;
+        visibility: hidden;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Transition "écran de télévision", initialement cachée -->
+  <div class="transition-effect"></div>
+
   <div class="container">
-    <a href="home.html" class="enter-button">Entrez dans la matrice</a>
+    <a href="home.html" class="enter-button" id="enterButton">Entrez dans la matrice</a>
   </div>
+
+  <script>
+    // On écoute le clic sur le bouton pour déclencher l'animation
+    document.querySelector('#enterButton').addEventListener('click', function() {
+      const transitionEffect = document.querySelector('.transition-effect');
+      
+      // Rendre visible l'effet de transition
+      transitionEffect.style.visibility = 'visible';
+      transitionEffect.style.animation = 'flickerEffect 2s ease-in-out forwards'; // Lancer l'animation
+
+      // Après l'animation (2 secondes), on redirige vers home.html
+      setTimeout(function() {
+        window.location.href = "home.html";
+      }, 2000);  // Délai de 2 secondes
+    });
+  </script>
 </body>
 </html>
