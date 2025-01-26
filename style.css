@@ -2,24 +2,29 @@
 body {
     margin: 0;
     padding: 0;
-    background: url('./assets/retro-buildings.png') no-repeat center center;
-    background-size: cover;
+    background-color: black;
     font-family: 'VT323', monospace;
-    color: #00ff00;
     overflow: hidden;
   }
   
-  /* Conteneur de la route */
+  /* Arrière-plan des bâtiments */
+  .cityscape {
+    position: relative;
+    height: 100vh;
+    background: url('./assets/retro-buildings.png') center center / cover no-repeat;
+  }
+  
+  /* Route couvrant tout le fond */
   .road {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 60%;
-    height: 100%;
+    width: 100%; /* Étendre sur toute la largeur */
+    height: 100%; /* Étendre sur toute la hauteur */
     background: linear-gradient(to top, black, #111);
-    border-left: 5px solid #00ff00;
-    border-right: 5px solid #00ff00;
+    border-left: 10px solid #00ff00;
+    border-right: 10px solid #00ff00;
     overflow: hidden;
   }
   
@@ -28,8 +33,8 @@ body {
     position: absolute;
     bottom: 10%;
     left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
+    transform: translateX(-50%) rotate(0deg); /* Droite */
+    width: 120px;
     height: auto;
     animation: none;
   }
