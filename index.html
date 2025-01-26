@@ -6,47 +6,28 @@
   <title>Entrez dans la matrice</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Styles spécifiques pour l'animation */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'VT323', monospace;
       background-color: black;
+      font-family: 'VT323', monospace;
       overflow: hidden;
-      position: relative;
     }
 
     .cityscape {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      position: relative;
       height: 100vh;
-    }
-
-    .buildings {
-      width: 20%;
-      height: 100%;
-      background-color: #222;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
-      box-shadow: 0 0 10px #00ff00;
-    }
-
-    .building {
-      width: 80%;
-      height: 20%;
-      background-color: #444;
-      margin: 10px 0;
-      box-shadow: 0 0 5px #00ff00;
+      background: url('./assets/retro-buildings.png') center center / cover no-repeat;
     }
 
     .road {
-      position: relative;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 60%;
       height: 100%;
-      background: linear-gradient(black, #111);
+      background: linear-gradient(to top, black, #111);
       border-left: 5px solid #00ff00;
       border-right: 5px solid #00ff00;
       overflow: hidden;
@@ -54,56 +35,72 @@
 
     .car {
       position: absolute;
-      bottom: -20%;
+      bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
-      width: 50px;
-      height: 100px;
-      background-color: #333;
-      border: 2px solid #444;
-      box-shadow: 0 0 10px #00ff00;
-      border-radius: 5px;
-      animation: drive 5s linear infinite;
+      width: 80px;
+      height: auto;
+      animation: none;
     }
 
-    /* Animation pour la voiture */
+    /* Animation pour déplacer la voiture */
     @keyframes drive {
       0% {
-        bottom: -20%;
+        bottom: 10%;
       }
       100% {
         bottom: 120%;
       }
     }
+
+    .enter-button {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ff00;
+      transition: all 0.3s ease;
+    }
+
+    .enter-button:hover {
+      background-color: #00ff00;
+      color: black;
+      box-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00;
+    }
   </style>
 </head>
 <body>
   <div class="cityscape">
-    <!-- Bâtiments à gauche -->
-    <div class="buildings">
-      <div class="building"></div>
-      <div class="building"></div>
-      <div class="building"></div>
-      <div class="building"></div>
-    </div>
-
-    <!-- Route au centre avec voiture -->
     <div class="road">
-      <div class="car"></div>
+      <!-- Voiture avec image -->
+      <img src="./assets/retro-car.png" alt="Car" class="car" id="car">
     </div>
 
-    <!-- Bâtiments à droite -->
-    <div class="buildings">
-      <div class="building"></div>
-      <div class="building"></div>
-      <div class="building"></div>
-      <div class="building"></div>
-    </div>
+    <!-- Bouton pour lancer l'animation -->
+    <button class="enter-button" onclick="startDrive()">Entrez dans la matrice</button>
   </div>
 
-  <!-- Bouton pour entrer dans la matrice -->
-  <div style="position: absolute; top: 90%; left: 50%; transform: translateX(-50%); text-align: center;">
-    <a href="./home.html" style="font-size: 2rem; color: #00ff00; text-decoration: none; background: black; padding: 10px 20px; border: 2px solid #00ff00; border-radius: 5px; box-shadow: 0 0 10px #00ff00;">Entrez dans la matrice</a>
-  </div>
+  <script>
+    function startDrive() {
+      // Ajout de l'animation pour la voiture
+      const car = document.getElementById('car');
+      car.style.animation = 'drive 5s linear forwards';
+
+      // Redirection après l'animation
+      setTimeout(() => {
+        window.location.href = './home.html';
+      }, 5000); // Correspond à la durée de l'animation (5s)
+    }
+  </script>
 </body>
 </html>
