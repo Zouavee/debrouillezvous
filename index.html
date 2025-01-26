@@ -3,19 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accueil</title>
+  <title>Entrez dans la matrice</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'VT323', monospace;
+      margin: 0;
+    }
+
+    .matrix-container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ff00;
+      text-shadow: 0 0 2px #00ff00, 0 0 5px #00ff00;
+      margin-bottom: 30px;
+    }
+
+    .enter-button {
+      display: inline-block;
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ff00;
+      transition: all 0.3s ease;
+    }
+
+    .enter-button:hover {
+      background-color: #00ff00;
+      color: black;
+      box-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
+  <div class="matrix-container">
     <h1>Article 15 : Débrouillez-vous pour survivre</h1>
-    <nav>
-      <ul>
-        <li><a href="about.html">About</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
+    <!-- Lien vers la nouvelle page "home.html" -->
+    <a href="./home.html" class="enter-button">Entrez dans la matrice</a>
   </div>
 </body>
 </html>
