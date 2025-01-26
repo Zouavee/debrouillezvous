@@ -38,7 +38,7 @@
       box-shadow: 0 0 10px #00ff00;
       position: absolute;
       bottom: 10%;
-      left: 30%;
+      left: 35%;
     }
 
     .enter-button:hover {
@@ -47,54 +47,23 @@
       box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
     }
 
-    /* Transition style : effet extinction de télé, invisible au départ */
-    .transition-effect {
+    /* Style pour le lecteur Spotify en haut à gauche */
+    .spotify-player {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      visibility: hidden;  /* Initialement invisible */
-      animation: none;
-    }
-
-    @keyframes flickerEffect {
-      0% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.5;
-      }
-      100% {
-        opacity: 1;
-        visibility: hidden;
-      }
+      top: 10px;
+      left: 10px;
+      z-index: 999;
     }
   </style>
 </head>
 <body>
-  <!-- Transition "écran de télévision", initialement cachée -->
-  <div class="transition-effect"></div>
-
-  <div class="container">
-    <a href="home.html" class="enter-button" id="enterButton">Entrez dans la matrice</a>
+  <!-- Lecteur Spotify en haut à gauche -->
+  <div class="spotify-player">
+    <iframe src="https://open.spotify.com/embed/track/2tktx7YEtG4Iadj9c4yqHR?si=afb77184ee4b480e" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
-  <script>
-    // On écoute le clic sur le bouton pour déclencher l'animation
-    document.querySelector('#enterButton').addEventListener('click', function() {
-      const transitionEffect = document.querySelector('.transition-effect');
-      
-      // Rendre visible l'effet de transition
-      transitionEffect.style.visibility = 'visible';
-      transitionEffect.style.animation = 'flickerEffect 2s ease-in-out forwards'; // Lancer l'animation
-
-      // Après l'animation (2 secondes), on redirige vers home.html
-      setTimeout(function() {
-        window.location.href = "home.html";
-      }, 2000);  // Délai de 2 secondes
-    });
-  </script>
+  <div class="container">
+    <a href="home.html" class="enter-button">Entrez dans la matrice</a>
+  </div>
 </body>
 </html>
