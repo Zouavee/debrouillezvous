@@ -98,3 +98,71 @@ body {
     height: 50px;
   }
 }
+
+/* Style général pour les pages avec fond noir */
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black; /* Fond noir sur toutes les pages */
+  color: #00ff00;
+  font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Styles de base pour les autres éléments de la page */
+h1, p {
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+  color: #00ff00;
+}
+
+.button {
+  display: inline-block;
+  margin: 10px;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  color: #00ff00;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 2px solid #00ff00;
+  border-radius: 5px;
+  background-color: black;
+  box-shadow: 0 0 10px #00ff00;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #00ff00;
+  color: black;
+  box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+}
+
+/* Footer text */
+.corp-text {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  font-size: 1.2rem;
+  text-transform: lowercase;
+}
+
+/* Media query pour les petits écrans (mobiles) */
+@media screen and (max-width: 768px) {
+  .enter-button {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .spotify-player {
+    width: 200px;
+    height: 60px;
+  }
+}
