@@ -1,18 +1,4 @@
-/* Style général pour l'index (sans fond noir) */
-body.index {
-  margin: 0;
-  padding: 0;
-  background: url('./assets/retro-buildings.png') no-repeat center center;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-family: 'Press Start 2P', cursive;
-  color: #00ff00;
-}
-
-/* Style général pour toutes les autres pages (fond noir) */
+/* Style général pour le fond noir */
 body:not(.index) {
   margin: 0;
   padding: 0;
@@ -24,15 +10,19 @@ body:not(.index) {
   align-items: center;
   height: 100vh;
   flex-direction: column;
+  position: relative;
 }
 
-/* Styles de base pour les autres éléments de la page */
-h1, p {
-  text-align: center;
-  font-family: 'Press Start 2P', cursive;
-  color: #00ff00;
+/* Style pour centrer tous les boutons sauf "Entrez dans la matrice" */
+.button-container {
+  display: flex;
+  flex-direction: column; /* Empile les boutons les uns au-dessus des autres */
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Remplir toute la hauteur disponible */
 }
 
+/* Style de base pour les boutons */
 .button {
   display: inline-block;
   margin: 10px;
@@ -54,12 +44,28 @@ h1, p {
   box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
 }
 
-.corp-text {
+/* Bouton "Entrez dans la matrice" reste en bas centré horizontalement */
+.enter-button {
+  font-size: 1.5rem;
+  padding: 15px 30px;
+  background-color: black;
+  color: #00ff00;
+  border: 2px solid #00ff00;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px #00ff00;
   position: absolute;
   bottom: 5%;
-  right: 5%;
-  font-size: 1.2rem;
-  text-transform: lowercase;
+  left: 50%;
+  transform: translateX(-50%); /* Centrer horizontalement */
+}
+
+.enter-button:hover {
+  background-color: #00ff00;
+  color: black;
+  box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
 }
 
 /* Media query pour les petits écrans (mobiles) */
@@ -71,6 +77,7 @@ h1, p {
     left: 50%;
     transform: translateX(-50%);
   }
+
   .spotify-player {
     width: 200px;
     height: 60px;
