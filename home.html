@@ -5,17 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accueil</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: lowercase;
+    }
+
+    .button {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      color: #00ff00;
+      text-decoration: none;
+      text-transform: uppercase;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      background-color: black;
+      box-shadow: 0 0 10px #00ff00;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #00ff00;
+      color: black;
+      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+    }
+
+    .corp-text {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+      font-size: 1.2rem;
+      text-transform: lowercase;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Article 15 : Débrouillez-vous pour survivre</h1>
-    <nav>
-      <ul>
-        <li><a href="about.html">About</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
+    <h1>article 15 : débrouillez-vous pour survivre</h1>
+    <div class="button-container">
+      <a href="about.html" class="button">About</a>
+      <a href="shop.html" class="button">Shop</a>
+      <a href="contact.html" class="button">Contact</a>
+    </div>
+    <a href="index.html" class="button">Retour à l'accueil</a>
   </div>
+
+  <div class="corp-text">débrouillez-vous corporation</div>
 </body>
 </html>

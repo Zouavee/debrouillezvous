@@ -6,127 +6,49 @@
   <title>Entrez dans la matrice</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Style général */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'VT323', monospace;
       background: url('./assets/retro-buildings.png') no-repeat center center;
       background-size: cover;
-      overflow: hidden;
-      color: #00ff00;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      font-family: 'Press Start 2P', cursive;
+      color: #00ff00;
     }
 
-    /* Conteneur central */
     .container {
       text-align: center;
     }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
-    }
-
-    /* Boutons */
-    .button {
-      display: inline-block;
-      margin: 10px;
-      padding: 15px 30px;
+    .enter-button {
       font-size: 1.5rem;
+      padding: 15px 30px;
+      background-color: black;
       color: #00ff00;
-      text-decoration: none;
-      text-transform: uppercase;
       border: 2px solid #00ff00;
       border-radius: 5px;
-      background-color: black;
-      box-shadow: 0 0 10px #00ff00;
-      transition: all 0.3s ease;
+      text-decoration: none;
       cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px #00ff00;
+      position: absolute;
+      bottom: 10%;
+      left: 35%;
     }
 
-    .button:hover {
+    .enter-button:hover {
       background-color: #00ff00;
       color: black;
       box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
-    }
-
-    /* Animation d’extinction de télévision */
-    .fade-out {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      animation: tv-off 0.5s ease-in-out forwards;
-    }
-
-    @keyframes tv-off {
-      0% {
-        height: 100%;
-        opacity: 0;
-      }
-      50% {
-        height: 2px;
-        opacity: 1;
-      }
-      100% {
-        height: 0;
-        opacity: 0;
-      }
-    }
-
-    /* Animation pour le mot "haine" */
-    .shake {
-      display: inline-block;
-      animation: shake 0.5s infinite;
-    }
-
-    @keyframes shake {
-      0%, 100% {
-        transform: translateX(0);
-      }
-      25% {
-        transform: translateX(-2px);
-      }
-      75% {
-        transform: translateX(2px);
-      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Entrez dans la matrice</h1>
-    <button class="button" onclick="goToPage('home')">Accueil</button>
-    <button class="button" onclick="goToPage('shop')">Shop</button>
-    <button class="button" onclick="goToPage('contact')">Contact</button>
+    <a href="home.html" class="enter-button">Entrez dans la matrice</a>
   </div>
-
-  <div id="fade" class="fade-out" style="display: none;"></div>
-
-  <script>
-    function goToPage(page) {
-      const fade = document.getElementById('fade');
-      fade.style.display = 'block'; // Affiche l'animation de transition
-      setTimeout(() => {
-        if (page === 'shop') {
-          document.body.innerHTML = `
-            <div class="container">
-              <h1>Rien à vendre à part de la <span class="shake">haine</span></h1>
-              <button class="button" onclick="location.reload()">Retour</button>
-            </div>
-          `;
-        } else {
-          window.location.href = `./${page}.html`;
-        }
-      }, 500); // Correspond à la durée de l'animation (0.5s)
-    }
-  </script>
 </body>
 </html>
