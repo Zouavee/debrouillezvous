@@ -6,106 +6,126 @@
   <title>Entrez dans la matrice</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Style général pour le corps */
+    /* Style général */
     body {
       margin: 0;
       padding: 0;
-      background-color: black;
       font-family: 'VT323', monospace;
+      background: url('./assets/retro-buildings.png') no-repeat center center;
+      background-size: cover;
       overflow: hidden;
-    }
-
-    /* Arrière-plan des bâtiments */
-    .cityscape {
-      position: relative;
-      height: 100vh;
-      background: url('./assets/retro-buildings.png') center center / cover no-repeat;
-    }
-
-    /* Route couvrant tout le fond */
-    .road {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%; /* Étendre sur toute la largeur */
-      height: 100%; /* Étendre sur toute la hauteur */
-      background: linear-gradient(to top, black, #111);
-      border-left: 10px solid #00ff00;
-      border-right: 10px solid #00ff00;
-      overflow: hidden;
-    }
-
-    /* Style pour la voiture */
-    .car {
-      position: absolute;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%) rotate(0deg); /* Droite */
-      width: 120px;
-      height: auto;
-      animation: none;
-    }
-
-    /* Animation pour déplacer la voiture */
-    @keyframes drive {
-      0% {
-        bottom: 10%;
-      }
-      100% {
-        bottom: 120%;
-      }
-    }
-
-    /* Style du bouton */
-    .enter-button {
-      position: absolute;
-      bottom: 5%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.5rem;
-      padding: 10px 20px;
-      background-color: black;
       color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Conteneur central */
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+    }
+
+    /* Boutons */
+    .button {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      color: #00ff00;
+      text-decoration: none;
+      text-transform: uppercase;
       border: 2px solid #00ff00;
       border-radius: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-weight: bold;
+      background-color: black;
       box-shadow: 0 0 10px #00ff00;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
-    .enter-button:hover {
+    .button:hover {
       background-color: #00ff00;
       color: black;
-      box-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00;
+      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+    }
+
+    /* Animation d’extinction de télévision */
+    .fade-out {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      animation: tv-off 0.5s ease-in-out forwards;
+    }
+
+    @keyframes tv-off {
+      0% {
+        height: 100%;
+        opacity: 0;
+      }
+      50% {
+        height: 2px;
+        opacity: 1;
+      }
+      100% {
+        height: 0;
+        opacity: 0;
+      }
+    }
+
+    /* Animation pour le mot "haine" */
+    .shake {
+      display: inline-block;
+      animation: shake 0.5s infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-2px);
+      }
+      75% {
+        transform: translateX(2px);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="cityscape">
-    <!-- La route au centre -->
-    <div class="road">
-      <!-- Voiture avec image -->
-      <img src="./assets/retro-car.png" alt="Voiture rétro" class="car" id="car">
-    </div>
-
-    <!-- Bouton pour lancer l'animation -->
-    <button class="enter-button" onclick="startDrive()">Entrez dans la matrice</button>
+  <div class="container">
+    <h1>Entrez dans la matrice</h1>
+    <button class="button" onclick="goToPage('home')">Accueil</button>
+    <button class="button" onclick="goToPage('shop')">Shop</button>
+    <button class="button" onclick="goToPage('contact')">Contact</button>
   </div>
 
-  <script>
-    function startDrive() {
-      // Ajout de l'animation pour la voiture
-      const car = document.getElementById('car');
-      car.style.animation = 'drive 5s linear forwards';
+  <div id="fade" class="fade-out" style="display: none;"></div>
 
-      // Redirection après l'animation
+  <script>
+    function goToPage(page) {
+      const fade = document.getElementById('fade');
+      fade.style.display = 'block'; // Affiche l'animation de transition
       setTimeout(() => {
-        window.location.href = './home.html';
-      }, 5000); // Correspond à la durée de l'animation (5s)
+        if (page === 'shop') {
+          document.body.innerHTML = `
+            <div class="container">
+              <h1>Rien à vendre à part de la <span class="shake">haine</span></h1>
+              <button class="button" onclick="location.reload()">Retour</button>
+            </div>
+          `;
+        } else {
+          window.location.href = `./${page}.html`;
+        }
+      }, 500); // Correspond à la durée de l'animation (0.5s)
     }
   </script>
 </body>
