@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Intégration de la police rétro pixelisée (Press Start 2P) -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
@@ -13,60 +12,64 @@
       padding: 0;
       background-color: black;
       color: #00ff00;
-      font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
+      font-family: 'Press Start 2P', cursive;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       flex-direction: column;
-      position: relative;
     }
 
     h1 {
       font-size: 2.5rem;
       text-align: center;
       margin-bottom: 20px;
-      text-transform: lowercase;
-      font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
-      text-shadow: none; /* Pas de flou ici */
     }
 
-    .button {
-      display: inline-block;
-      margin: 10px;
-      padding: 15px 30px;
-      font-size: 1.5rem;
-      color: #00ff00;
-      text-decoration: none;
-      text-transform: uppercase;
-      border: 2px solid #00ff00;
-      border-radius: 5px;
-      background-color: black;
-      box-shadow: 0 0 10px #00ff00;
-      cursor: pointer;
+    .shop-container {
+      text-align: center;
     }
 
-    .button:hover {
+    .shop-item {
+      margin: 20px;
+    }
+
+    .shop-button {
       background-color: #00ff00;
       color: black;
-      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      cursor: pointer;
+      text-transform: uppercase;
     }
 
-    .corp-text {
-      position: absolute;
-      bottom: 5%;
-      right: 5%;
-      font-size: 1.2rem;
-      text-transform: lowercase;
+    .shop-button:hover {
+      background-color: black;
+      color: #00ff00;
+      box-shadow: 0 0 10px #00ff00;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>rien à vendre à part de la haine</h1> <!-- Texte NET et rétro -->
-    <a href="home.html" class="button">Retour à l'accueil</a>
+  <h1>Shop</h1>
+
+  <!-- Section de produits -->
+  <div class="shop-container">
+    <div class="shop-item">
+      <h2>Article 1</h2>
+      <p>Dit-moi ce que tu veux</p>
+      <button class="shop-button">Acheter</button>
+    </div>
+    <div class="shop-item">
+      <h2>Article 2</h2>
+      <p>tu bouffes c'que j'te prépare</p>
+      <button class="shop-button">Acheter</button>
+    </div>
   </div>
 
-  <div class="corp-text">débrouillez-vous corporation</div>
+  <!-- Bouton retour à l'accueil -->
+  <a href="home.html" class="shop-button">Retour à l'accueil</a>
 </body>
 </html>

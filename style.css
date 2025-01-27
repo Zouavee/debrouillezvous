@@ -8,7 +8,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
   flex-direction: column;
+  position: relative;
   overflow: auto; /* Permet le défilement sur les appareils mobiles */
 }
 
