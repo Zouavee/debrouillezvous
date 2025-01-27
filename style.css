@@ -1,8 +1,8 @@
-/* Style général pour le fond noir */
-body:not(.index) {
+/* Style général pour le site */
+body {
   margin: 0;
   padding: 0;
-  background-color: black; /* Fond noir pour toutes les pages sauf l'index */
+  background-color: black; /* Fond noir sur toutes les pages sauf l'index */
   color: #00ff00;
   font-family: 'Press Start 2P', cursive;
   display: flex;
@@ -11,18 +11,26 @@ body:not(.index) {
   height: 100vh;
   flex-direction: column;
   position: relative;
+  overflow: hidden; /* Empêche le débordement vertical */
 }
 
-/* Style pour centrer tous les boutons sauf "Entrez dans la matrice" */
+/* Styles de base pour les autres éléments de la page */
+h1, p, .button {
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+  color: #00ff00;
+  text-shadow: none; /* Pas de flou sur le texte */
+}
+
+/* Style pour les boutons */
 .button-container {
   display: flex;
-  flex-direction: column; /* Empile les boutons les uns au-dessus des autres */
+  flex-direction: column; /* Empile les boutons */
   justify-content: center;
   align-items: center;
-  height: 100%; /* Remplir toute la hauteur disponible */
+  height: 100%;
 }
 
-/* Style de base pour les boutons */
 .button {
   display: inline-block;
   margin: 10px;
@@ -44,34 +52,57 @@ body:not(.index) {
   box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
 }
 
-/* Bouton "Entrez dans la matrice" reste en bas centré horizontalement */
-.enter-button {
-  font-size: 1.5rem;
-  padding: 15px 30px;
-  background-color: black;
-  color: #00ff00;
-  border: 2px solid #00ff00;
-  border-radius: 5px;
-  text-decoration: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  box-shadow: 0 0 10px #00ff00;
-  position: absolute;
+/* Le texte "débrouillez-vous corporation" en bas à droite */
+.corp-text {
+  position: fixed;
   bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%); /* Centrer horizontalement */
+  right: 5%;
+  font-size: 1.2rem;
+  text-transform: lowercase;
+  font-family: 'Press Start 2P', cursive;
+  color: #00ff00;
 }
 
-.enter-button:hover {
-  background-color: #00ff00;
-  color: black;
-  box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
-}
+/* Media query pour tablettes et petites tailles d'écran */
+@media screen and (max-width: 1024px) {
+  body {
+    font-size: 1rem; /* Ajuste la taille du texte sur les tablettes */
+  }
 
-/* Media query pour les petits écrans (mobiles) */
-@media screen and (max-width: 768px) {
   .enter-button {
-    font-size: 1.2rem;
+    font-size: 1.5rem; /* Ajuster la taille du bouton pour tablettes */
+    padding: 12px 25px;
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .spotify-player {
+    width: 250px;
+    height: 60px;
+  }
+
+  /* Centrer les autres boutons */
+  .button-container {
+    padding: 10px;
+  }
+
+  .corp-text {
+    bottom: 2%;
+    right: 2%;
+    font-size: 1rem; /* Ajuster la taille du texte pour qu'il reste lisible sur tablette */
+  }
+}
+
+/* Media query pour les téléphones (petits écrans) */
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 1rem; /* Ajuster la taille du texte sur mobile */
+  }
+
+  .enter-button {
+    font-size: 1.2rem; /* Réduire la taille des boutons sur les petits écrans */
     padding: 10px 20px;
     bottom: 20%;
     left: 50%;
@@ -80,6 +111,49 @@ body:not(.index) {
 
   .spotify-player {
     width: 200px;
-    height: 60px;
+    height: 60px; /* Réduire la taille du lecteur pour les petits écrans */
+  }
+
+  .corp-text {
+    bottom: 2%;
+    right: 2%;
+    font-size: 0.9rem; /* Réduire la taille du texte sur mobile */
+  }
+
+  /* Ajuster les boutons en colonnes */
+  .button-container {
+    padding: 5px;
+  }
+
+  /* Réduire les marges et paddings sur les petits écrans */
+  .button {
+    padding: 10px 20px;
+    font-size: 1rem; /* Réduire la taille des boutons */
+  }
+}
+
+/* Media query pour les très petits écrans (par exemple, téléphones en mode portrait) */
+@media screen and (max-width: 480px) {
+  .button-container {
+    padding: 3px;
+  }
+
+  .button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+
+  .enter-button {
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
+
+  .corp-text {
+    font-size: 0.8rem; /* Réduire la taille du texte sur les très petits écrans */
+  }
+
+  .spotify-player {
+    width: 180px;
+    height: 50px; /* Réduire la taille du lecteur pour les très petits écrans */
   }
 }

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Intégration de la police rétro pixelisée (Press Start 2P) -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
@@ -13,7 +12,7 @@
       padding: 0;
       background-color: black;
       color: #00ff00;
-      font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
+      font-family: 'Press Start 2P', cursive;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -26,30 +25,70 @@
       font-size: 2.5rem;
       text-align: center;
       margin-bottom: 20px;
-      text-transform: lowercase;
-      font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
-      text-shadow: none; /* Pas de flou ici */
     }
 
-    .button {
-      display: inline-block;
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    input, textarea {
+      font-family: 'Press Start 2P', cursive;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      padding: 10px;
       margin: 10px;
-      padding: 15px 30px;
+      width: 300px;
+      font-size: 1rem;
+    }
+
+    input[type="submit"] {
+      width: 200px;
+      background-color: #00ff00;
+      color: black;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    input[type="submit"]:hover {
+      background-color: black;
+      color: #00ff00;
+      box-shadow: 0 0 10px #00ff00;
+    }
+
+    .instagram-link {
+      margin-top: 20px;
       font-size: 1.5rem;
       color: #00ff00;
       text-decoration: none;
-      text-transform: uppercase;
-      border: 2px solid #00ff00;
-      border-radius: 5px;
-      background-color: black;
-      box-shadow: 0 0 10px #00ff00;
-      cursor: pointer;
     }
 
-    .button:hover {
+    .instagram-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Retour à l'accueil */
+    .home-button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .home-button:hover {
       background-color: #00ff00;
       color: black;
-      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+      box-shadow: 0 0 10px #00ff00;
     }
 
     .corp-text {
@@ -62,10 +101,24 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>contactez-nous</h1> <!-- Texte NET et rétro -->
-    <a href="home.html" class="button">Retour à l'accueil</a>
+  <h1>Contactez-nous</h1>
+
+  <!-- Formulaire de contact -->
+  <div class="form-container">
+    <form action="mailto:debrouillezvous@gmail.com" method="POST" enctype="text/plain">
+      <input type="text" name="Nom" placeholder="Nom" required>
+      <input type="email" name="Email" placeholder="Email" required>
+      <input type="text" name="Objet" placeholder="Objet" required>
+      <textarea name="Message" placeholder="Message" rows="5" required></textarea>
+      <input type="submit" value="Envoyer">
+    </form>
   </div>
+
+  <!-- Lien vers Instagram -->
+  <a href="https://www.instagram.com/debrouillezvous" class="instagram-link" target="_blank">Suivez-nous sur Instagram</a>
+
+  <!-- Bouton retour à l'accueil -->
+  <a href="home.html" class="home-button">Retour à l'accueil</a>
 
   <div class="corp-text">débrouillez-vous corporation</div>
 </body>

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entrez dans la matrice</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Intégration de la police rétro pixelisée (Press Start 2P) -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
@@ -40,9 +39,9 @@
       text-transform: uppercase;
       box-shadow: 0 0 10px #00ff00;
       position: absolute;
-      bottom: 5%; /* Positionner en bas de la page */
-      left: 50%; /* Centrer horizontalement */
-      transform: translateX(-50%); /* Ajuster pour centrer */
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .enter-button:hover {
@@ -63,17 +62,13 @@
   </style>
 </head>
 <body>
+  <!-- Lecteur Spotify en haut à gauche, musique en autoplay -->
+  <div class="spotify-player">
+    <iframe src="https://open.spotify.com/embed/track/2tktx7YEtG4Iadj9c4yqHR?si=afb77184ee4b480e&autoplay=true" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  </div>
 
   <div class="container">
-    <!-- Lecteur Spotify en haut à gauche -->
-    <div class="spotify-player">
-      <iframe src="https://open.spotify.com/embed/track/2tktx7YEtG4Iadj9c4yqHR?si=afb77184ee4b480e" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-    </div>
-
-    <!-- Bouton "Entrez dans la matrice" centré en bas -->
     <a href="home.html" class="enter-button">Entrez dans la matrice</a>
   </div>
-  <body class="index">
-    <!-- Le reste du contenu de l'index reste inchangé -->  
-  </body>
+</body>
 </html>
