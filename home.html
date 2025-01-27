@@ -1,80 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <!-- header.html -->
+<audio id="backgroundMusic" autoplay loop>
+  <source src="assets/musique.mp3" type="audio/mp3">
+  Votre navigateur ne supporte pas la lecture de fichiers audio.
+</audio>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accueil</title>
+  <title>Accueil - Debrouillez-vous</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Intégration de la police rétro pixelisée (Press Start 2P) -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: black;
-      color: #00ff00;
-      font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
+      background: url('assets/fondhome.jpg') no-repeat center center fixed; /* Image de fond */
+      background-size: cover; /* L'image recouvre toute la fenêtre */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      flex-direction: column;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 20px;
-      text-transform: lowercase;
-      font-family: 'Press Start 2P', cursive; /* Application de la police rétro */
-      text-shadow: none; /* Pas de flou ici */
-    }
-
-    .button {
-      display: inline-block;
-      margin: 10px;
-      padding: 15px 30px;
-      font-size: 1.5rem;
+      font-family: 'Press Start 2P', cursive;
       color: #00ff00;
-      text-decoration: none;
-      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column; /* Alignement des éléments en colonne */
+      justify-content: center;
+      align-items: center; /* Centrer les éléments */
+      height: 100%; /* Prendre toute la hauteur de l'écran */
+      width: 100%;
+    }
+
+    .enter-button {
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      background-color: black;
+      color: #00ff00;
       border: 2px solid #00ff00;
       border-radius: 5px;
-      background-color: black;
-      box-shadow: 0 0 10px #00ff00;
+      text-decoration: none;
       cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px #00ff00;
+      margin: 10px;
+      transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Transition des boutons */
     }
 
-    .button:hover {
+    .enter-button:hover {
       background-color: #00ff00;
       color: black;
-      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; /* Effet de l'ombre qui se renforce */
+      transform: scale(1.1); /* Zoom léger au survol */
     }
 
-    .corp-text {
-      position: absolute;
+    /* Le texte "Article 15 : débrouillez-vous pour survivre" qui clignote */
+    .clignotant {
+      font-size: 2rem;
+      text-transform: uppercase;
+      color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      margin-bottom: 20px;
+      animation: blink 4s linear infinite; /* Animation de clignotement qui dure indéfiniment */
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Nouveau texte "Ne clique pas n'importe où" en bas à droite */
+    .link-text {
+      position: fixed;
       bottom: 5%;
       right: 5%;
       font-size: 1.2rem;
       text-transform: lowercase;
+      color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .link-text:hover {
+      color: #ff0000; /* Change la couleur au survol pour un effet visuel */
     }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h1>article 15 : débrouillez-vous pour survivre</h1>
-    <div class="button-container">
-      <a href="about.html" class="button">About</a>
-      <a href="shop.html" class="button">Shop</a>
-      <a href="contact.html" class="button">Contact</a>
-    </div>
-    <a href="index.html" class="button">Retour à l'accueil</a>
+    <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
+
+    <!-- Boutons -->
+    <a href="about.html" class="enter-button" id="aboutButton">About</a>
+    <a href="contact.html" class="enter-button" id="contactButton">Contact</a>
+    <a href="shop.html" class="enter-button" id="shopButton">Shop</a>
   </div>
 
-  <div class="corp-text">débrouillez-vous corporation</div>
+  <!-- Texte "ne clique pas n'importe où" en bas à droite, lien vers Instagram -->
+  <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
+
 </body>
 </html>
-
-<!-- Texte "débrouillez-vous corporation" en bas à droite -->
-<div class="corp-text">débrouillez-vous corporation</div>

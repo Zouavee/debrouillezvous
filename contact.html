@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact</title>
+  <title>Contact - Debrouillez-vous</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -11,104 +12,110 @@
       margin: 0;
       padding: 0;
       background-color: black;
-      color: #00ff00;
       font-family: 'Press Start 2P', cursive;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 2.5rem;
+      color: #00ff00;
       text-align: center;
-      margin-bottom: 20px;
     }
 
-    .form-container {
+    .container {
+      width: 100%;
       display: flex;
-      flex-direction: column; /* Afficher les champs du formulaire en colonne */
       justify-content: center;
       align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      padding: 20px;
     }
 
-    input, textarea {
-      font-family: 'Press Start 2P', cursive;
+    .contact-form {
       background-color: black;
       color: #00ff00;
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
       border: 2px solid #00ff00;
-      border-radius: 5px;
+      border-radius: 10px;
+    }
+
+    .contact-form input, .contact-form textarea {
+      width: 100%;
       padding: 10px;
-      margin: 10px;
-      width: 300px;
-      font-size: 1rem;
-    }
-
-    input[type="submit"] {
-      width: 200px;
-      background-color: #00ff00;
-      color: black;
-      border: none;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
-
-    input[type="submit"]:hover {
+      margin-bottom: 10px;
+      border: 1px solid #00ff00;
+      border-radius: 5px;
       background-color: black;
       color: #00ff00;
-      box-shadow: 0 0 10px #00ff00;
     }
 
-    .instagram-link {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      color: #00ff00;
-      text-decoration: none;
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 150px;
     }
 
-    .instagram-link:hover {
-      text-decoration: underline;
-    }
-
-    .home-button {
-      font-size: 1.2rem;
-      padding: 10px 20px;
+    .submit-button {
       background-color: black;
       color: #00ff00;
       border: 2px solid #00ff00;
-      border-radius: 5px;
-      text-decoration: none;
+      padding: 10px 20px;
+      font-size: 1.2rem;
       cursor: pointer;
-      margin-top: 20px;
+      width: 100%;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
     }
 
-    .home-button:hover {
+    .submit-button:hover {
       background-color: #00ff00;
       color: black;
-      box-shadow: 0 0 10px #00ff00;
     }
+
+    /* Nouveau bouton pour revenir à l'accueil */
+    .back-button {
+      position: fixed;
+      bottom: 5%;
+      left: 5%;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #00ff00;
+      color: black;
+    }
+
   </style>
 </head>
 <body>
-  <h1>Contactez-nous</h1>
 
-  <!-- Formulaire de contact -->
-  <div class="form-container">
-    <form action="mailto:debrouillezvous@gmail.com" method="POST" enctype="text/plain">
-      <input type="text" name="Nom" placeholder="Nom" required>
-      <input type="email" name="Email" placeholder="Email" required>
-      <input type="text" name="Objet" placeholder="Objet" required>
-      <textarea name="Message" placeholder="Message" rows="5" required></textarea>
-      <input type="submit" value="Envoyer">
-    </form>
+  <div class="container">
+    <div class="contact-form">
+      <h2>Contactez-nous</h2>
+      <form id="contactForm" action="https://formspree.io/f/{your_form_id}" method="POST">
+        <input type="text" name="name" placeholder="Nom" required>
+        <input type="text" name="subject" placeholder="Objet" required>
+        <textarea name="message" placeholder="Votre message..." required></textarea>
+        <button type="submit" class="submit-button">Envoyer</button>
+      </form>
+    </div>
   </div>
 
-  <!-- Lien vers Instagram -->
-  <a href="https://www.instagram.com/debrouillezvous" class="instagram-link" target="_blank">suivez-nous sur instagram</a>
+  <!-- Nouveau bouton pour revenir à l'accueil -->
+  <a href="home.html" class="back-button">Retour à l'accueil</a>
 
-  <!-- Bouton retour à l'accueil -->
-  <a href="home.html" class="home-button">Retour à l'accueil</a>
+  <script>
+    // Formulaire submit handler
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Empêche l'envoi normal du formulaire
+      alert("Votre message a été envoyé. Vous recevrez une réponse rapidement !");
+      window.location.href = "contact.html"; // Redirige vers la page contact après l'envoi
+    });
+  </script>
+
 </body>
 </html>
