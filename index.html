@@ -58,6 +58,47 @@
       width: 300px;
       height: 80px;
     }
+
+    /* Animation de chargement avec trois petits points */
+    .loading {
+      display: none; /* Cacher initialement l'animation de chargement */
+      text-align: center;
+      font-size: 2rem;
+      font-family: 'Press Start 2P', cursive;
+      color: #00ff00;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .dot {
+      animation: blink 1.5s infinite step-start;
+    }
+
+    .dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes blink {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -66,8 +107,27 @@
     <iframe src="https://open.spotify.com/embed/track/2tktx7YEtG4Iadj9c4yqHR?si=afb77184ee4b480e&autoplay=true" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
-  <div class="container">
-    <a href="home.html" class="enter-button">Entrez dans la matrice</a>
+  <!-- Zone de chargement avec trois points -->
+  <div id="loading" class="loading">
+    <span class="dot">.</span>
+    <span class="dot">.</span>
+    <span class="dot">.</span>
   </div>
+
+  <div class="container">
+    <a href="home.html" class="enter-button" id="enterButton">Entrez dans la matrice</a>
+  </div>
+
+  <script>
+    document.getElementById('enterButton').addEventListener('click', function() {
+      // Afficher l'animation de chargement
+      document.getElementById('loading').style.display = 'block';
+
+      // Attendre 1 seconde (réduit pour le test) avant de rediriger vers home
+      setTimeout(function() {
+        window.location.href = 'home.html'; // Rediriger vers home.html après le chargement
+      }, 1000); // Durée du chargement en ms (1 seconde pour tester plus vite)
+    });
+  </script>
 </body>
 </html>

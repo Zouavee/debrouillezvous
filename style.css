@@ -22,15 +22,7 @@ h1, p, .button {
   text-shadow: none; /* Pas de flou sur le texte */
 }
 
-/* Style pour les boutons */
-.button-container {
-  display: flex;
-  flex-direction: column; /* Empile les boutons */
-  justify-content: center;
-  align-items: center;
-  width: 100%; /* Prend toute la largeur disponible */
-}
-
+/* Animation des ombres dynamiques des boutons */
 .button {
   display: inline-block;
   margin: 10px;
@@ -44,12 +36,14 @@ h1, p, .button {
   background-color: black;
   box-shadow: 0 0 10px #00ff00;
   cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Ajout d'une transition */
 }
 
 .button:hover {
   background-color: #00ff00;
   color: black;
-  box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+  box-shadow: 0 0 30px #00ff00, 0 0 40px #00ff00; /* Effet de l'ombre qui se renforce */
+  transform: scale(1.1); /* Ajout d'un effet de zoom léger au survol */
 }
 
 /* Le texte "débrouillez-vous corporation" en bas à droite */
@@ -61,6 +55,47 @@ h1, p, .button {
   text-transform: lowercase;
   font-family: 'Press Start 2P', cursive;
   color: #00ff00;
+}
+
+/* Animation de chargement avec trois petits points */
+.loading {
+  display: none;
+  text-align: center;
+  font-size: 2rem;
+  font-family: 'Press Start 2P', cursive;
+  color: #00ff00;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dot {
+  animation: blink 1.5s infinite step-start;
+}
+
+.dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Media query pour tablettes et petites tailles d'écran */
@@ -152,5 +187,28 @@ h1, p, .button {
   .spotify-player {
     width: 180px;
     height: 50px; /* Réduire la taille du lecteur pour les très petits écrans */
+  }
+}
+
+/* Le texte "débrouillez-vous corporation" en bas à droite avec animation */
+.corp-text {
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  font-size: 1.2rem;
+  text-transform: lowercase;
+  font-family: 'Press Start 2P', cursive;
+  color: #00ff00;
+  white-space: nowrap;
+  animation: scroll-text 10s linear infinite; /* Animation de défilement du texte */
+}
+
+/* Animation du texte défilant de droite à gauche */
+@keyframes scroll-text {
+  0% {
+    transform: translateX(100%); /* Début du texte à droite hors de l'écran */
+  }
+  100% {
+    transform: translateX(-100%); /* Fin du texte à gauche hors de l'écran */
   }
 }
