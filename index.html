@@ -50,6 +50,7 @@
       box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
     }
 
+    /* Lecteur Spotify en haut à gauche, musique en autoplay */
     .spotify-player {
       position: absolute;
       top: 10px;
@@ -59,7 +60,7 @@
       height: 80px;
     }
 
-    /* Animation de chargement avec trois petits points */
+    /* Animation de chargement avec trois gros points carrés */
     .loading {
       display: none; /* Cacher initialement l'animation de chargement */
       text-align: center;
@@ -70,9 +71,17 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      background-color: black;
+      height: 100vh; /* Fond noir de l'écran */
+      width: 100%;
     }
 
     .dot {
+      width: 30px; /* Taille des points carrés */
+      height: 30px; /* Taille des points carrés */
+      background-color: #00ff00;
+      margin: 0 10px;
+      display: inline-block;
       animation: blink 1.5s infinite step-start;
     }
 
@@ -107,11 +116,11 @@
     <iframe src="https://open.spotify.com/embed/track/2tktx7YEtG4Iadj9c4yqHR?si=afb77184ee4b480e&autoplay=true" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
-  <!-- Zone de chargement avec trois points -->
+  <!-- Zone de chargement avec trois gros points carrés -->
   <div id="loading" class="loading">
-    <span class="dot">.</span>
-    <span class="dot">.</span>
-    <span class="dot">.</span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
   </div>
 
   <div class="container">
@@ -123,10 +132,10 @@
       // Afficher l'animation de chargement
       document.getElementById('loading').style.display = 'block';
 
-      // Attendre 1 seconde (réduit pour le test) avant de rediriger vers home
+      // Attendre 3 secondes avant de rediriger vers home
       setTimeout(function() {
         window.location.href = 'home.html'; // Rediriger vers home.html après le chargement
-      }, 1000); // Durée du chargement en ms (1 seconde pour tester plus vite)
+      }, 3000); // Durée du chargement en ms (3 secondes)
     });
   </script>
 </body>
