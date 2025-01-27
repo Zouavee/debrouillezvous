@@ -8,10 +8,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   flex-direction: column;
-  position: relative;
-  overflow: hidden; /* Empêche le débordement vertical */
+  overflow: auto; /* Permet le défilement sur les appareils mobiles */
 }
 
 /* Styles de base pour les autres éléments de la page */
@@ -28,7 +26,7 @@ h1, p, .button {
   flex-direction: column; /* Empile les boutons */
   justify-content: center;
   align-items: center;
-  height: 100%;
+  width: 100%; /* Prend toute la largeur disponible */
 }
 
 .button {
@@ -72,10 +70,6 @@ h1, p, .button {
   .enter-button {
     font-size: 1.5rem; /* Ajuster la taille du bouton pour tablettes */
     padding: 12px 25px;
-    position: absolute;
-    bottom: 15%;
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   .spotify-player {
@@ -99,6 +93,7 @@ h1, p, .button {
 @media screen and (max-width: 768px) {
   body {
     font-size: 1rem; /* Ajuster la taille du texte sur mobile */
+    overflow-y: scroll; /* Permet le défilement vertical */
   }
 
   .enter-button {
