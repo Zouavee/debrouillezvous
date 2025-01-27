@@ -58,55 +58,6 @@
       width: 300px;
       height: 80px;
     }
-
-    /* Animation de chargement avec trois gros points carrés */
-    .loading {
-      display: none; /* Cacher initialement l'animation de chargement */
-      text-align: center;
-      font-size: 2rem;
-      font-family: 'Press Start 2P', cursive;
-      color: #00ff00;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: 100vh;
-      width: 100%;
-      background-color: black; /* Fond noir pendant le chargement */
-    }
-
-    .dot {
-      width: 30px; /* Taille des points carrés */
-      height: 30px; /* Taille des points carrés */
-      background-color: #00ff00;
-      margin: 0 10px;
-      display: inline-block;
-      animation: blink 2s infinite step-start; /* Durée augmentée à 2 secondes */
-    }
-
-    .dot:nth-child(1) {
-      animation-delay: 0s;
-    }
-
-    .dot:nth-child(2) {
-      animation-delay: 0.3s;
-    }
-
-    .dot:nth-child(3) {
-      animation-delay: 0.6s;
-    }
-
-    @keyframes blink {
-      0% {
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
   </style>
 </head>
 <body>
@@ -115,27 +66,8 @@
     <iframe src="https://open.spotify.com/embed/track/2tktx7YEtG4Iadj9c4yqHR?si=afb77184ee4b480e&autoplay=true" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 
-  <!-- Zone de chargement avec trois gros points carrés -->
-  <div id="loading" class="loading">
-    <span class="dot"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-  </div>
-
   <div class="container">
-    <a href="home.html" class="enter-button" id="enterButton">Entrez dans la matrice</a>
+    <a href="home.html" class="enter-button">Entrez dans la matrice</a>
   </div>
-
-  <script>
-    document.getElementById('enterButton').addEventListener('click', function() {
-      // Afficher l'animation de chargement
-      document.getElementById('loading').style.display = 'block';
-
-      // Attendre 3 secondes avant de rediriger vers home
-      setTimeout(function() {
-        window.location.href = 'home.html'; // Rediriger vers home.html après le chargement
-      }, 3000); // Durée du chargement en ms (3 secondes)
-    });
-  </script>
 </body>
 </html>
