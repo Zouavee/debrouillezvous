@@ -1,15 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-
-  <!-- header.html -->
-  <audio id="backgroundMusic" autoplay loop muted>
-    <source src="assets/musique.mp3" type="audio/mp3">
-    Votre navigateur ne supporte pas la lecture de fichiers audio.
-  </audio>
-
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accueil - Debrouillez-vous</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -99,20 +91,26 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
+  <!-- Audio pour la musique -->
+  <audio id="backgroundMusic" autoplay loop muted>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
 
-        <!-- Boutons -->
-        <a href="about.html" class="enter-button" id="aboutButton">About</a>
-        <a href="contact.html" class="enter-button" id="contactButton">Contact</a>
-        <a href="shop.html" class="enter-button" id="agendaButton">Agenda</a> <!-- Changement ici, redirige vers shop.html -->
+  <div class="container">
+    <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
 
-        <!-- Nouveau bouton "Make Tours Great Again" -->
-        <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a> <!-- Nouveau bouton ajouté -->
-    </div>
+    <!-- Boutons -->
+    <a href="about.html" class="enter-button" id="aboutButton">About</a>
+    <a href="contact.html" class="enter-button" id="contactButton">Contact</a>
+    <a href="shop.html" class="enter-button" id="agendaButton">Agenda</a> <!-- Changement ici, redirige vers shop.html -->
 
-    <!-- Texte "ne clique pas n'importe où" en bas à droite, lien vers Instagram -->
-    <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
+    <!-- Nouveau bouton "Make Tours Great Again" -->
+    <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a> <!-- Nouveau bouton ajouté -->
+  </div>
+
+  <!-- Texte "ne clique pas n'importe où" en bas à droite, lien vers Instagram -->
+  <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
 
   <script>
     // Une fois que la page est entièrement chargée, activer la musique

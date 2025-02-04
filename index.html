@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Virus - Debrouillez-vous</title>
@@ -90,6 +89,20 @@
       transition: opacity 2s ease-out;
       z-index: 9999; /* Au-dessus de tout le reste */
       pointer-events: none; /* Permet de ne pas bloquer les interactions avant la transition */
+    }
+
+    /* Media Queries pour adapter le design aux petits écrans */
+    @media (max-width: 768px) {
+      .password-container {
+        width: 200px;
+        padding: 12px;
+      }
+
+      .password-container label,
+      .password-container input,
+      .password-container button {
+        font-size: 1rem;
+      }
     }
 
   </style>
