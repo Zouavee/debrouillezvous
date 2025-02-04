@@ -1,76 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dates Importantes - Debrouillez-vous</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Press Start 2P', cursive;
+            background: url('assets/fondhome.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #00ff00;
+            text-align: center;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: black;
-      color: #00ff00;
-      font-family: 'Press Start 2P', cursive;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-    }
+        .important-dates-container {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00ff00;
+            width: 60%;
+            max-width: 600px;
+        }
 
-    h1 {
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        .important-dates-header {
+            font-size: 2rem;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
 
-    .shop-container {
-      text-align: center;
-    }
+        .important-date {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: none; /* Retirer l'effet de texte rouge */
+        }
 
-    .shop-item {
-      margin: 20px;
-    }
+        .important-date span {
+            font-weight: bold;
+        }
 
-    .shop-button {
-      background-color: #00ff00;
-      color: black;
-      padding: 15px 30px;
-      font-size: 1.5rem;
-      border: 2px solid #00ff00;
-      border-radius: 5px;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
+        /* Bouton Retour à l'accueil */
+        .back-button {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            background-color: black;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
 
-    .shop-button:hover {
-      background-color: black;
-      color: #00ff00;
-      box-shadow: 0 0 10px #00ff00;
-    }
-  </style>
+        .back-button:hover {
+            background-color: #00ff00;
+            color: black;
+            transform: scale(1.1);
+        }
+
+    </style>
 </head>
 <body>
-  <h1>Shop</h1>
 
-  <!-- Section de produits -->
-  <div class="shop-container">
-    <div class="shop-item">
-      <h2>Article 1</h2>
-      <p>Dit-moi ce que tu veux</p>
-      <button class="shop-button">Acheter</button>
-    </div>
-    <div class="shop-item">
-      <h2>Article 2</h2>
-      <p>tu bouffes c'que j'te prépare</p>
-      <button class="shop-button">Acheter</button>
-    </div>
-  </div>
+    <div class="important-dates-container">
+        <div class="important-dates-header">Dates Importantes</div>
 
-  <!-- Bouton retour à l'accueil -->
-  <a href="home.html" class="shop-button">Retour à l'accueil</a>
+        <!-- La date importante du 22 juin 2025 -->
+        <div class="important-date">
+            <span>22 juin 2025 :</span> Débrouillez-vous pour survivre avec J9nueve
+        </div>
+    </div>
+
+    <!-- Bouton Retour à l'accueil -->
+    <a href="home.html" class="back-button">Retour à l'accueil</a>
+
 </body>
 </html>

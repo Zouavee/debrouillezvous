@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Flappy Donald</title>
+  <!-- Import de la typo Press Start 2P -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+    /* Boutons HTML interactifs */
+    #homeLink, #restartButton {
+      font-family: 'Press Start 2P', cursive;
+      color: #00FF00;
+      text-decoration: none;
+      background: transparent;
+      border: 2px solid #00FF00;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      z-index: 10;
+      position: absolute;
+    }
+    #homeLink:hover, #restartButton:hover {
+      background: #00FF00;
+      color: black;
+    }
+    /* Positionnement du bouton "Retour à l'accueil" : en bas à droite */
+    #homeLink {
+      bottom: 20px;
+      right: 20px;
+      display: none;
+    }
+    /* Positionnement du bouton "Recommencer" : en bas à gauche */
+    #restartButton {
+      bottom: 20px;
+      left: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <!-- Bouton d'accueil ("Retour à l'accueil") -->
+  <a href="home.html" id="homeLink">Retour à l'accueil</a>
+  <!-- Bouton de relance ("Recommencer") -->
+  <button id="restartButton">Recommencer</button>
+  
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Création et configuration de la musique de fond
+    const bgMusic = new Audio("assets/flappy.mp3");
+    bgMusic.loop = true;
+    bgMusic.volume = 0.5; // ajustez le volume selon vos préférences
+    
+    // États du jeu
+    const STATE = {
+      START: 'start',
+      TRANSITION: 'transition',
+      AUTO_JUMP: 'autoJump',
+      PLAYING: 'playing',
+      GAMEOVER: 'gameover'
+    };
+    let gameState = STATE.START;
+    
+    // Variables pour suivre la position de la souris (pour le bouton "Commencer" dessiné sur le canvas)
+    let mouseX = 0, mouseY = 0;
+    canvas.addEventListener("mousemove", function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    
+    // Chargement de l'image "donald"
+    const donaldImg = new Image();
+    donaldImg.src = "assets/donald.jpg";
+    
+    // Chargement de l'image "tuyau"
+    const pipeImg = new Image();
+    pipeImg.src = "assets/tuyau.jpg";
+    
+    // Propriétés du personnage
+    const bird = {
+      x: canvas.width / 4,
+      y: canvas.height / 2,
+      width: 50,
+      height: 50,
+      velocity: 0,
+      gravity: 0.5,
+      jumpStrength: -10
+    };
+    
+    // Variables pour les tuyaux
+    let pipes = [];
+    const pipeWidth = 80;
+    const gapHeight = 250;  // Espace vertical entre les tuyaux (augmenté)
+    let pipeInterval = 1500;
+    let lastPipeTime = 0;
+    
+    // Score (augmente de 50 à chaque tuyau passé)
+    let score = 0;
+    
+    // Variables pour la phase d'auto-saut
+    let autoJumpCount = 0;
+    let autoJumpTimer = 0;
+    
+    // Timer pour la transition
+    let transitionTimer = 0;
+    
+    // Gestion du clavier
+    document.addEventListener("keydown", function(e) {
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (gameState === STATE.PLAYING) {
+          bird.velocity = bird.jumpStrength;
+        }
+      }
+    });
+    
+    // Le clic sur le canvas sert à démarrer ou à sauter
+    canvas.addEventListener("click", function() {
+      if (gameState === STATE.START) {
+        // Lancement de la musique lors d'un geste utilisateur
+        bgMusic.play();
+        startTransition();
+      } else if (gameState === STATE.PLAYING) {
+        bird.velocity = bird.jumpStrength;
+      }
+    });
+    
+    // Bouton "Recommencer"
+    const restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", function() {
+      restartGame();
+    });
+    
+    function startTransition() {
+      gameState = STATE.TRANSITION;
+      transitionTimer = 0;
+    }
+    
+    function restartGame() {
+      gameState = STATE.START;
+      bird.y = canvas.height / 2;
+      bird.velocity = 0;
+      pipes = [];
+      score = 0;
+      autoJumpCount = 0;
+      autoJumpTimer = 0;
+      lastPipeTime = 0;
+      document.getElementById("restartButton").style.display = "none";
+      document.getElementById("homeLink").style.display = "block";
+    }
+    
+    // Vérification de collision entre le bird et un tuyau
+    function checkCollision(bird, pipe) {
+      // Partie supérieure du tuyau
+      let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
+      // Partie inférieure du tuyau
+      let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
+      
+      let bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
+      
+      if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
+      if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
+      
+      return false;
+    }
+    
+    let lastTime = 0;
+    function gameLoop(timestamp) {
+      let deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
+      
+      // Fond noir
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Gestion de l'affichage des boutons HTML selon l'état du jeu
+      if (gameState === STATE.START) {
+        document.getElementById("homeLink").style.display = "block";
+        document.getElementById("restartButton").style.display = "none";
+      } else if (gameState === STATE.GAMEOVER) {
+        document.getElementById("homeLink").style.display = "block";
+        document.getElementById("restartButton").style.display = "block";
+      } else {
+        document.getElementById("homeLink").style.display = "none";
+        document.getElementById("restartButton").style.display = "none";
+      }
+      
+      if (gameState === STATE.START) {
+        // Dessin du bouton "Commencer" sur le canvas
+        let text = "Commencer";
+        ctx.font = "40px 'Press Start 2P'";
+        let metrics = ctx.measureText(text);
+        let textWidth = metrics.width;
+        let textHeight = 40; // approximation
+        let paddingX = 20;
+        let paddingY = 10;
+        let rectWidth = textWidth + 2 * paddingX;
+        let rectHeight = textHeight + 2 * paddingY;
+        let rectX = canvas.width / 2 - rectWidth / 2;
+        let rectY = canvas.height / 2 - rectHeight / 2;
+        
+        // Vérification du survol sur le rectangle "Commencer"
+        let hovered = (mouseX >= rectX && mouseX <= rectX + rectWidth &&
+                       mouseY >= rectY && mouseY <= rectY + rectHeight);
+        
+        if (hovered) {
+          // Survol : fond vert, texte noir
+          ctx.fillStyle = "#00FF00";
+          ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+          ctx.strokeStyle = "#00FF00";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+          ctx.fillStyle = "black";
+        } else {
+          // Normal : contour vert et texte vert
+          ctx.strokeStyle = "#00FF00";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+          ctx.fillStyle = "#00FF00";
+        }
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        
+      } else if (gameState === STATE.TRANSITION) {
+        // Transition rapide : 0,5 sec
+        transitionTimer += deltaTime;
+        let alpha = Math.min(1, transitionTimer / 500);
+        ctx.fillStyle = "rgba(0, 0, 0," + alpha + ")";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (transitionTimer >= 500) {
+          gameState = STATE.AUTO_JUMP;
+          autoJumpTimer = 0;
+        }
+      } else if (gameState === STATE.AUTO_JUMP) {
+        // Sauts automatiques accélérés
+        autoJumpTimer += deltaTime;
+        if (autoJumpCount === 0 && autoJumpTimer > 200) {
+          bird.velocity = bird.jumpStrength;
+          autoJumpCount++;
+        } else if (autoJumpCount === 1 && autoJumpTimer > 400) {
+          bird.velocity = bird.jumpStrength;
+          autoJumpCount++;
+        } else if (autoJumpCount === 2 && autoJumpTimer > 600) {
+          gameState = STATE.PLAYING;
+        }
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+        ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
+        // Affichage du score dès le début
+        ctx.fillStyle = "#00FF00";
+        ctx.font = "20px 'Press Start 2P'";
+        ctx.textAlign = "left";
+        ctx.fillText(score, 20, 40);
+        
+      } else if (gameState === STATE.PLAYING) {
+        // Physique du bird
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+        
+        // Création périodique des tuyaux
+        if (timestamp - lastPipeTime > pipeInterval) {
+          let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
+          let topHeight = gapPosition;
+          let bottomHeight = canvas.height - gapPosition - gapHeight;
+          pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
+          lastPipeTime = timestamp;
+        }
+        
+        // Mise à jour et affichage des tuyaux
+        for (let i = 0; i < pipes.length; i++) {
+          pipes[i].x -= 2;
+          if (checkCollision(bird, pipes[i])) {
+            gameState = STATE.GAMEOVER;
+          }
+          if (!pipes[i].passed && pipes[i].x + pipeWidth < bird.x) {
+            score += 50;
+            pipes[i].passed = true;
+          }
+        }
+        pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
+        
+        // Dessin des tuyaux avec l'image "tuyau.jpg"
+        pipes.forEach(pipe => {
+          // Dessin du tuyau supérieur (retourné verticalement)
+          ctx.save();
+          ctx.translate(pipe.x, pipe.top);
+          ctx.scale(1, -1);
+          ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipe.top);
+          ctx.restore();
+          // Dessin du tuyau inférieur (orientation normale)
+          ctx.drawImage(pipeImg, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+        });
+        
+        // Affichage du bird
+        ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
+        
+        // Affichage du score en haut à gauche
+        ctx.fillStyle = "#00FF00";
+        ctx.font = "20px 'Press Start 2P'";
+        ctx.textAlign = "left";
+        ctx.fillText(score, 20, 40);
+        
+        // Défaite si le bird touche le sol
+        if (bird.y + bird.height > canvas.height) {
+          gameState = STATE.GAMEOVER;
+        }
+        
+      } else if (gameState === STATE.GAMEOVER) {
+        // Affichage du message de défaite en plus gros
+        ctx.fillStyle = "#00FF00";
+        ctx.font = "60px 'Press Start 2P'";
+        ctx.textAlign = "center";
+        ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
+        // Les boutons "Retour à l'accueil" et "Recommencer" sont affichés via leur CSS
+      }
+      
+      requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
+    
+    // Ajustement du canvas lors du redimensionnement de la fenêtre
+    window.addEventListener('resize', function() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
