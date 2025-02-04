@@ -1,214 +1,66 @@
-/* Style général pour le site */
+/* Fond blanc pour toute la page */
 body {
   margin: 0;
   padding: 0;
-  background-color: black; /* Fond noir sur toutes les pages sauf l'index */
-  color: #00ff00;
-  font-family: 'Press Start 2P', cursive;
+  background-color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* Container principal */
+.container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  flex-direction: column;
-  position: relative;
-  overflow: auto; /* Permet le défilement sur les appareils mobiles */
-}
-
-/* Styles de base pour les autres éléments de la page */
-h1, p, .button {
   text-align: center;
-  font-family: 'Press Start 2P', cursive;
-  color: #00ff00;
-  text-shadow: none; /* Pas de flou sur le texte */
 }
 
-/* Animation des ombres dynamiques des boutons */
-.button {
-  display: inline-block;
-  margin: 10px;
-  padding: 15px 30px;
-  font-size: 1.5rem;
-  color: #00ff00;
+/* Animation de rotation pour le logo */
+.logo-container .logo {
+  width: 150px;
+  height: 150px;
+  animation: rotate 5s infinite linear;
+}
+
+/* Animation du bouton */
+.shop-button {
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 16px;
   text-decoration: none;
-  text-transform: uppercase;
-  border: 2px solid #00ff00;
+  background-color: #333;
+  color: white;
   border-radius: 5px;
-  background-color: black;
-  box-shadow: 0 0 10px #00ff00;
-  cursor: pointer;
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Ajout d'une transition */
+  transition: transform 0.5s;
 }
 
-.button:hover {
-  background-color: #00ff00;
-  color: black;
-  box-shadow: 0 0 30px #00ff00, 0 0 40px #00ff00; /* Effet de l'ombre qui se renforce */
-  transform: scale(1.1); /* Ajout d'un effet de zoom léger au survol */
+.shop-button:hover {
+  transform: rotate(360deg);
 }
 
-/* Le texte "débrouillez-vous corporation" en bas à droite */
-.corp-text {
-  position: fixed;
-  bottom: 5%;
-  right: 5%;
-  font-size: 1.2rem;
-  text-transform: lowercase;
-  font-family: 'Press Start 2P', cursive;
-  color: #00ff00;
+/* Style pour le texte DBV */
+.text-container p {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
-/* Animation de chargement avec trois petits points */
-.loading {
-  display: none;
-  text-align: center;
-  font-size: 2rem;
-  font-family: 'Press Start 2P', cursive;
-  color: #00ff00;
+/* Message en bas à droite */
+.bottom-right {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: #555;
 }
 
-.dot {
-  animation: blink 1.5s infinite step-start;
-}
-
-.dot:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.6s;
-}
-
-@keyframes blink {
+/* Animation de rotation pour le logo */
+@keyframes rotate {
   0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
+      transform: rotate(0deg);
   }
   100% {
-    opacity: 0;
-  }
-}
-
-/* Media query pour tablettes et petites tailles d'écran */
-@media screen and (max-width: 1024px) {
-  body {
-    font-size: 1rem; /* Ajuste la taille du texte sur les tablettes */
-  }
-
-  .enter-button {
-    font-size: 1.5rem; /* Ajuster la taille du bouton pour tablettes */
-    padding: 12px 25px;
-  }
-
-  .spotify-player {
-    width: 250px;
-    height: 60px;
-  }
-
-  /* Centrer les autres boutons */
-  .button-container {
-    padding: 10px;
-  }
-
-  .corp-text {
-    bottom: 2%;
-    right: 2%;
-    font-size: 1rem; /* Ajuster la taille du texte pour qu'il reste lisible sur tablette */
-  }
-}
-
-/* Media query pour les téléphones (petits écrans) */
-@media screen and (max-width: 768px) {
-  body {
-    font-size: 1rem; /* Ajuster la taille du texte sur mobile */
-    overflow-y: scroll; /* Permet le défilement vertical */
-  }
-
-  .enter-button {
-    font-size: 1.2rem; /* Réduire la taille des boutons sur les petits écrans */
-    padding: 10px 20px;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .spotify-player {
-    width: 200px;
-    height: 60px; /* Réduire la taille du lecteur pour les petits écrans */
-  }
-
-  .corp-text {
-    bottom: 2%;
-    right: 2%;
-    font-size: 0.9rem; /* Réduire la taille du texte sur mobile */
-  }
-
-  /* Ajuster les boutons en colonnes */
-  .button-container {
-    padding: 5px;
-  }
-
-  /* Réduire les marges et paddings sur les petits écrans */
-  .button {
-    padding: 10px 20px;
-    font-size: 1rem; /* Réduire la taille des boutons */
-  }
-}
-
-/* Media query pour les très petits écrans (par exemple, téléphones en mode portrait) */
-@media screen and (max-width: 480px) {
-  .button-container {
-    padding: 3px;
-  }
-
-  .button {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-  }
-
-  .enter-button {
-    font-size: 1rem;
-    padding: 8px 15px;
-  }
-
-  .corp-text {
-    font-size: 0.8rem; /* Réduire la taille du texte sur les très petits écrans */
-  }
-
-  .spotify-player {
-    width: 180px;
-    height: 50px; /* Réduire la taille du lecteur pour les très petits écrans */
-  }
-}
-
-/* Le texte "débrouillez-vous corporation" en bas à droite avec animation */
-.corp-text {
-  position: fixed;
-  bottom: 5%;
-  right: 5%;
-  font-size: 1.2rem;
-  text-transform: lowercase;
-  font-family: 'Press Start 2P', cursive;
-  color: #00ff00;
-  white-space: nowrap;
-  animation: scroll-text 10s linear infinite; /* Animation de défilement du texte */
-}
-
-/* Animation du texte défilant de droite à gauche */
-@keyframes scroll-text {
-  0% {
-    transform: translateX(100%); /* Début du texte à droite hors de l'écran */
-  }
-  100% {
-    transform: translateX(-100%); /* Fin du texte à gauche hors de l'écran */
+      transform: rotate(360deg);
   }
 }
