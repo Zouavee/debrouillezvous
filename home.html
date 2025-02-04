@@ -2,100 +2,100 @@
 <html lang="en">
 <head>
 
-    <!-- header.html -->
-    <audio id="backgroundMusic" autoplay loop>
-      <source src="assets/musique.mp3" type="audio/mp3">
-      Votre navigateur ne supporte pas la lecture de fichiers audio.
-    </audio>
+  <!-- header.html -->
+  <audio id="backgroundMusic" autoplay loop muted>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil - Debrouillez-vous</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: url('assets/fondhome.jpg') no-repeat center center fixed;
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: 'Press Start 2P', cursive;
-        color: #00ff00;
-        text-align: center;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accueil - Debrouillez-vous</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('assets/fondhome.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Press Start 2P', cursive;
+      color: #00ff00;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .enter-button {
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px #00ff00;
+      margin: 10px;
+      transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    .enter-button:hover {
+      background-color: #00ff00;
+      color: black;
+      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+      transform: scale(1.1);
+    }
+
+    /* Le texte "Article 15 : débrouillez-vous pour survivre" qui clignote */
+    .clignotant {
+      font-size: 2rem;
+      text-transform: uppercase;
+      color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      margin-bottom: 20px;
+      animation: blink 4s linear infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
       }
-
-      .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
+      50% {
+        opacity: 0;
       }
+    }
 
-      .enter-button {
-        font-size: 1.5rem;
-        padding: 15px 30px;
-        background-color: black;
-        color: #00ff00;
-        border: 2px solid #00ff00;
-        border-radius: 5px;
-        text-decoration: none;
-        cursor: pointer;
-        text-transform: uppercase;
-        box-shadow: 0 0 10px #00ff00;
-        margin: 10px;
-        transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-      }
+    /* Nouveau texte "Ne clique pas n'importe où" en bas à droite */
+    .link-text {
+      position: fixed;
+      bottom: 5%;
+      right: 5%;
+      font-size: 1.2rem;
+      text-transform: lowercase;
+      color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
 
-      .enter-button:hover {
-        background-color: #00ff00;
-        color: black;
-        box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
-        transform: scale(1.1);
-      }
+    .link-text:hover {
+      color: #ff0000;
+    }
 
-      /* Le texte "Article 15 : débrouillez-vous pour survivre" qui clignote */
-      .clignotant {
-        font-size: 2rem;
-        text-transform: uppercase;
-        color: #00ff00;
-        font-family: 'Press Start 2P', cursive;
-        margin-bottom: 20px;
-        animation: blink 4s linear infinite;
-      }
-
-      @keyframes blink {
-        0%, 100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0;
-        }
-      }
-
-      /* Nouveau texte "Ne clique pas n'importe où" en bas à droite */
-      .link-text {
-        position: fixed;
-        bottom: 5%;
-        right: 5%;
-        font-size: 1.2rem;
-        text-transform: lowercase;
-        color: #00ff00;
-        font-family: 'Press Start 2P', cursive;
-        cursor: pointer;
-        transition: color 0.3s ease;
-      }
-
-      .link-text:hover {
-        color: #ff0000;
-      }
-
-    </style>
+  </style>
 </head>
 <body>
 
@@ -113,6 +113,15 @@
 
     <!-- Texte "ne clique pas n'importe où" en bas à droite, lien vers Instagram -->
     <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
+
+  <script>
+    // Une fois que la page est entièrement chargée, activer la musique
+    window.onload = function() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      backgroundMusic.muted = false; // Retirer le muting pour que la musique commence à jouer
+      backgroundMusic.play(); // Lancer la musique
+    }
+  </script>
 
 </body>
 </html>
