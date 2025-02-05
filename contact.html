@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact - Debrouillez-vous</title>
@@ -37,7 +36,9 @@
       border-radius: 10px;
     }
 
-    .contact-form input, .contact-form textarea {
+    /* Appliquer la même typographie aux champs de saisie */
+    .contact-form input,
+    .contact-form textarea {
       width: 100%;
       padding: 10px;
       margin-bottom: 10px;
@@ -45,6 +46,8 @@
       border-radius: 5px;
       background-color: black;
       color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1.2rem;
     }
 
     .contact-form textarea {
@@ -52,16 +55,18 @@
       min-height: 150px;
     }
 
+    /* Bouton Envoyer avec typographie similaire au titre */
     .submit-button {
       background-color: black;
       color: #00ff00;
       border: 2px solid #00ff00;
       padding: 10px 20px;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
+      font-family: 'Press Start 2P', cursive;
       cursor: pointer;
       width: 100%;
       margin-top: 10px;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .submit-button:hover {
@@ -69,7 +74,7 @@
       color: black;
     }
 
-    /* Nouveau bouton pour revenir à l'accueil */
+    /* Bouton pour revenir à l'accueil (en bas à gauche) */
     .back-button {
       position: fixed;
       bottom: 5%;
@@ -79,6 +84,7 @@
       border: 2px solid #00ff00;
       padding: 10px 20px;
       font-size: 1.2rem;
+      font-family: 'Press Start 2P', cursive;
       cursor: pointer;
       text-decoration: none;
       transition: background-color 0.3s ease;
@@ -88,7 +94,24 @@
       background-color: #00ff00;
       color: black;
     }
-
+    
+    /* Bouton "ne clique pas n'importe où" (en bas à droite) */
+    .link-text {
+      position: fixed;
+      bottom: 5%;
+      right: 5%;
+      font-size: 1.2rem;
+      text-transform: lowercase;
+      color: #00ff00;
+      font-family: 'Press Start 2P', cursive;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .link-text:hover {
+      color: #ff0000;
+    }
   </style>
 </head>
 <body>
@@ -96,7 +119,8 @@
   <div class="container">
     <div class="contact-form">
       <h2>Contactez-nous</h2>
-      <form id="contactForm" action="https://formspree.io/f/{your_form_id}" method="POST">
+      <!-- Note : on a retiré l'attribut action pour gérer l'envoi via JavaScript -->
+      <form id="contactForm">
         <input type="text" name="name" placeholder="Nom" required>
         <input type="text" name="subject" placeholder="Objet" required>
         <textarea name="message" placeholder="Votre message..." required></textarea>
@@ -105,15 +129,29 @@
     </div>
   </div>
 
-  <!-- Nouveau bouton pour revenir à l'accueil -->
-  <a href="home.html" class="back-button">Retour à l'accueil</a>
+  <!-- Bouton Retour à l'accueil (en bas à gauche) -->
+  <a href="index.html" class="back-button">Retour à l'accueil</a>
+  
+  <!-- Bouton "ne clique pas n'importe où" (en bas à droite) -->
+  <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
 
   <script>
-    // Formulaire submit handler
     document.getElementById('contactForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Empêche l'envoi normal du formulaire
-      alert("Votre message a été envoyé. Vous recevrez une réponse rapidement !");
-      window.location.href = "contact.html"; // Redirige vers la page contact après l'envoi
+      event.preventDefault(); // Empêche l'envoi classique du formulaire
+      var name = document.getElementsByName('name')[0].value;
+      var subject = document.getElementsByName('subject')[0].value;
+      var message = document.getElementsByName('message')[0].value;
+      
+      // Vérifier que tous les champs sont remplis (les attributs required devraient déjà le garantir)
+      if(name && subject && message) {
+        // Composer le lien mailto en incluant le nom et le message dans le corps
+        var mailtoLink = "mailto:debrouillezvous@gmail.com"
+          + "?subject=" + encodeURIComponent(subject)
+          + "&body=" + encodeURIComponent("Nom: " + name + "\n\n" + message);
+        window.location.href = mailtoLink;
+      } else {
+        alert("Veuillez remplir tous les champs.");
+      }
     });
   </script>
 

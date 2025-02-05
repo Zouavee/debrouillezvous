@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Flappy Donald</title>
-  <!-- Import de la typo Press Start 2P -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -16,7 +15,7 @@
     canvas {
       display: block;
     }
-    /* Boutons HTML interactifs */
+    /* Boutons interactifs */
     #homeLink, #restartButton {
       font-family: 'Press Start 2P', cursive;
       color: #00FF00;
@@ -33,13 +32,13 @@
       background: #00FF00;
       color: black;
     }
-    /* Positionnement du bouton "Retour à l'accueil" : en bas à droite */
+    /* Positionnement du bouton "Retour à l'accueil" */
     #homeLink {
       bottom: 20px;
       right: 20px;
       display: none;
     }
-    /* Positionnement du bouton "Recommencer" : en bas à gauche */
+    /* Positionnement du bouton "Recommencer" */
     #restartButton {
       bottom: 20px;
       left: 20px;
@@ -49,9 +48,9 @@
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <!-- Bouton d'accueil ("Retour à l'accueil") -->
-  <a href="home.html" id="homeLink">Retour à l'accueil</a>
-  <!-- Bouton de relance ("Recommencer") -->
+  <!-- Bouton "Retour à l'accueil" renvoie vers index.html -->
+  <a href="index.html" id="homeLink">Retour à l'accueil</a>
+  <!-- Bouton "Recommencer" -->
   <button id="restartButton">Recommencer</button>
   
   <script>
@@ -60,10 +59,10 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Création et configuration de la musique de fond
+    // Musique de fond
     const bgMusic = new Audio("assets/flappy.mp3");
     bgMusic.loop = true;
-    bgMusic.volume = 0.5; // ajustez le volume selon vos préférences
+    bgMusic.volume = 0.5;
     
     // États du jeu
     const STATE = {
@@ -75,7 +74,7 @@
     };
     let gameState = STATE.START;
     
-    // Variables pour suivre la position de la souris (pour le bouton "Commencer" dessiné sur le canvas)
+    // Suivi de la souris
     let mouseX = 0, mouseY = 0;
     canvas.addEventListener("mousemove", function(e) {
       mouseX = e.clientX;
@@ -86,7 +85,7 @@
     const donaldImg = new Image();
     donaldImg.src = "assets/donald.jpg";
     
-    // Propriétés du personnage
+    // Propriétés du "bird"
     const bird = {
       x: canvas.width / 4,
       y: canvas.height / 2,
@@ -97,25 +96,24 @@
       jumpStrength: -10
     };
     
-    // Variables pour les tuyaux (dessinés sous forme de tours)
+    // Tuyaux
     let pipes = [];
     const pipeWidth = 80;
-    // Définition de l'espacement vertical des tuyaux en fonction de la taille de l'écran.
     let gapHeight = window.innerWidth < 768 ? 350 : 250;
     let pipeInterval = 1500;
     let lastPipeTime = 0;
     
-    // Score (augmente de 50 à chaque tuyau passé)
+    // Score
     let score = 0;
     
-    // Variables pour la phase d'auto-saut
+    // Variables pour l'auto-jump
     let autoJumpCount = 0;
     let autoJumpTimer = 0;
     
-    // Timer pour la transition
+    // Timer de transition
     let transitionTimer = 0;
     
-    // Fonction pour générer un tuyau
+    // Génération d'un tuyau
     function spawnPipe() {
       let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
       let topHeight = gapPosition;
@@ -133,10 +131,9 @@
       }
     });
     
-    // Le clic sur le canvas sert à démarrer ou à sauter
+    // Clic sur le canvas pour démarrer ou sauter
     canvas.addEventListener("click", function() {
       if (gameState === STATE.START) {
-        // Lancement de la musique lors d'un geste utilisateur
         bgMusic.play();
         startTransition();
       } else if (gameState === STATE.PLAYING) {
@@ -168,18 +165,13 @@
       document.getElementById("homeLink").style.display = "block";
     }
     
-    // Vérification de collision entre le bird et un tuyau
+    // Collision
     function checkCollision(bird, pipe) {
-      // Partie supérieure du tuyau
       let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
-      // Partie inférieure du tuyau
       let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
-      
       let bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
-      
       if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
       if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
-      
       return false;
     }
     
@@ -188,11 +180,9 @@
       let deltaTime = timestamp - lastTime;
       lastTime = timestamp;
       
-      // Fond noir
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Affichage conditionnel des boutons HTML selon l'état du jeu
       if (gameState === STATE.START) {
         document.getElementById("homeLink").style.display = "block";
         document.getElementById("restartButton").style.display = "none";
@@ -205,23 +195,19 @@
       }
       
       if (gameState === STATE.START) {
-        // Dessin du bouton "Commencer" sur le canvas
         let text = "Commencer";
         ctx.font = "40px 'Press Start 2P'";
         let metrics = ctx.measureText(text);
         let textWidth = metrics.width;
-        let textHeight = 40; // approximation
+        let textHeight = 40;
         let paddingX = 20;
         let paddingY = 10;
         let rectWidth = textWidth + 2 * paddingX;
         let rectHeight = textHeight + 2 * paddingY;
         let rectX = canvas.width / 2 - rectWidth / 2;
         let rectY = canvas.height / 2 - rectHeight / 2;
-        
-        // Vérification du survol sur le rectangle "Commencer"
         let hovered = (mouseX >= rectX && mouseX <= rectX + rectWidth &&
                        mouseY >= rectY && mouseY <= rectY + rectHeight);
-        
         if (hovered) {
           ctx.fillStyle = "#00FF00";
           ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
@@ -240,7 +226,6 @@
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
         
       } else if (gameState === STATE.TRANSITION) {
-        // Transition rapide : 0,5 sec
         transitionTimer += deltaTime;
         let alpha = Math.min(1, transitionTimer / 500);
         ctx.fillStyle = "rgba(0, 0, 0," + alpha + ")";
@@ -250,7 +235,6 @@
           autoJumpTimer = 0;
         }
       } else if (gameState === STATE.AUTO_JUMP) {
-        // Sauts automatiques accélérés
         autoJumpTimer += deltaTime;
         if (autoJumpCount === 0 && autoJumpTimer > 200) {
           bird.velocity = bird.jumpStrength;
@@ -264,29 +248,24 @@
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
-        // Affichage du score dès le début
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
         
       } else if (gameState === STATE.PLAYING) {
-        // On génère immédiatement un tuyau si aucun n'existe
         if (pipes.length === 0) {
           spawnPipe();
           lastPipeTime = timestamp;
         }
-        // Physique du bird
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
         
-        // Création périodique des tuyaux
         if (timestamp - lastPipeTime > pipeInterval) {
           spawnPipe();
           lastPipeTime = timestamp;
         }
         
-        // Mise à jour et affichage des tuyaux (dessin en forme de tours)
         pipes.forEach(pipe => {
           pipe.x -= 2;
           if (checkCollision(bird, pipe)) {
@@ -296,38 +275,32 @@
             score += 50;
             pipe.passed = true;
           }
-          // Dessin du tuyau supérieur (forme de tour)
+          // Dessin des tuyaux
           ctx.fillStyle = "green";
           ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
           ctx.strokeRect(pipe.x, 0, pipeWidth, pipe.top);
-          // Dessin du tuyau inférieur (forme de tour)
           ctx.fillStyle = "green";
           ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
           ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
-        // On filtre les tuyaux qui sont complètement sortis de l'écran
         pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
         
-        // Affichage du bird
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
         
-        // Affichage du score en haut à gauche
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
         
-        // Défaite si le bird touche le sol
         if (bird.y + bird.height > canvas.height) {
           gameState = STATE.GAMEOVER;
         }
         
       } else if (gameState === STATE.GAMEOVER) {
-        // Affichage du message de défaite en plus gros
         ctx.fillStyle = "#00FF00";
         ctx.font = "60px 'Press Start 2P'";
         ctx.textAlign = "center";
@@ -338,11 +311,9 @@
     }
     requestAnimationFrame(gameLoop);
     
-    // Ajustement du canvas lors du redimensionnement de la fenêtre
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      // Mise à jour de gapHeight selon la taille de l'écran : plus grand sur petit écran
       gapHeight = window.innerWidth < 768 ? 350 : 250;
     });
   </script>

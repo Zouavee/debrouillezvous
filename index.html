@@ -2,18 +2,27 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Virus - Debrouillez-vous</title>
+  <title>Debrouillez-vous - Accueil Fusionné</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    /* Styles globaux */
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
+      font-family: 'Press Start 2P', cursive;
     }
-
-    /* GIF en fond */
+    
+    /* ---------------------------
+       Écran d'entrée (Splash)
+    --------------------------- */
+    #splash {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
     .gif-background {
       position: fixed;
       top: 0;
@@ -21,10 +30,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      z-index: -1;
+      z-index: -2;
     }
-
-    /* Bloc de mot de passe en bas à droite */
     .password-container {
       position: fixed;
       bottom: 5%;
@@ -36,18 +43,15 @@
       box-shadow: 0 0 15px #00ff00;
       text-align: center;
       width: 250px;
+      z-index: 1;
     }
-
     .password-container label {
-      font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem;
       display: block;
       margin-bottom: 8px;
       text-transform: uppercase;
     }
-
     .password-container input {
-      font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem;
       padding: 8px;
       width: 100%;
@@ -57,9 +61,7 @@
       border: 2px solid #00ff00;
       border-radius: 5px;
     }
-
     .password-container button {
-      font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem;
       padding: 8px 20px;
       background-color: black;
@@ -70,14 +72,11 @@
       text-transform: uppercase;
       width: 100%;
     }
-
     .password-container button:hover {
       background-color: #00ff00;
       color: black;
       box-shadow: 0 0 10px #00ff00;
     }
-
-    /* Fond noir pour la transition */
     .blackout {
       position: fixed;
       top: 0;
@@ -87,57 +86,126 @@
       background-color: black;
       opacity: 0;
       transition: opacity 2s ease-out;
-      z-index: 9999; /* Au-dessus de tout le reste */
-      pointer-events: none; /* Permet de ne pas bloquer les interactions avant la transition */
+      z-index: 2;
+      pointer-events: none;
     }
-
-    /* Media Queries pour adapter le design aux petits écrans */
-    @media (max-width: 768px) {
-      .password-container {
-        width: 200px;
-        padding: 12px;
-      }
-
-      .password-container label,
-      .password-container input,
-      .password-container button {
-        font-size: 1rem;
-      }
+    
+    /* ---------------------------
+       Écran d'accueil (Home)
+    --------------------------- */
+    #home {
+      display: none; /* Masqué tant qu'on n'est pas authentifié */
+      width: 100%;
+      height: 100vh;
+      background: url('assets/fondhome.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #00ff00;
+      position: relative;
     }
-
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .clignotant {
+      font-size: 2rem;
+      text-transform: uppercase;
+      animation: blink 4s linear infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .enter-button {
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px #00ff00;
+      transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+    .enter-button:hover {
+      background-color: #00ff00;
+      color: black;
+      box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
 
-  <!-- GIF en fond -->
-  <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background">
-
-  <!-- Bloc de mot de passe -->
-  <div class="password-container">
-    <label for="password">Mot de passe</label>
-    <input type="password" id="password" placeholder="Entrez le mot de passe">
-    <button onclick="accessSite()">Accéder</button>
+  <!-- Écran d'entrée (Splash) -->
+  <div id="splash">
+    <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background">
+    <div class="password-container">
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" placeholder="Entrez le mot de passe">
+      <button onclick="accessSite()">Accéder</button>
+    </div>
+    <div class="blackout" id="blackout"></div>
   </div>
 
-  <!-- Fond noir pour la transition -->
-  <div class="blackout" id="blackout"></div>
+  <!-- Écran d'accueil (Home) -->
+  <div id="home">
+    <!-- Élément audio pour la musique -->
+    <audio id="backgroundMusic" autoplay loop muted>
+      <source src="assets/musique.mp3" type="audio/mp3">
+      Votre navigateur ne supporte pas la lecture de fichiers audio.
+    </audio>
+    <div class="container">
+      <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
+      <a href="about.html" class="enter-button" id="aboutButton">À propos</a>
+      <a href="shop.html" class="enter-button" id="agendaButton">Agenda</a>
+      <a href="contact.html" class="enter-button" id="contactButton">Contactez-nous</a>
+      <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a>
+    </div>
+  </div>
 
   <script>
-    function accessSite() {
-      // Lorsque l'on clique sur "Accéder", afficher le fond noir
-      document.getElementById('blackout').style.opacity = '1'; // Affiche le fond noir
-
-      setTimeout(function() {
-        // Si la page est chargée dans container.html (dans un iframe), changer la source de l'iframe
-        if(window.parent && window.parent !== window && window.parent.document.getElementById('contentFrame')) {
-          window.parent.document.getElementById('contentFrame').src = 'home.html';
-        } else {
-          // Sinon, rediriger normalement
-          window.location.href = 'home.html';
+    // Dès que la page se charge, on vérifie si l'utilisateur est déjà authentifié
+    window.addEventListener('load', function(){
+      if(sessionStorage.getItem('auth') === 'true'){
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('home').style.display = 'flex';
+        var audio = document.getElementById('backgroundMusic');
+        if(audio) {
+          audio.muted = false;
+          audio.play().catch(function(error) {
+            console.error("Erreur lors de la lecture de l'audio :", error);
+          });
         }
-      }, 2000); // Après 2 secondes
+      }
+    });
+
+    function accessSite() {
+      // Effet de transition
+      document.getElementById('blackout').style.opacity = '1';
+      var audio = document.getElementById('backgroundMusic');
+      if (audio) {
+        audio.muted = false;
+        audio.play().catch(function(error) {
+          console.error("Erreur lors de la lecture de l'audio :", error);
+        });
+      }
+      // Enregistrer l'authentification
+      sessionStorage.setItem('auth', 'true');
+      // Après 2 secondes, on bascule vers l'écran d'accueil
+      setTimeout(function() {
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('home').style.display = 'flex';
+      }, 2000);
     }
   </script>
-
 </body>
 </html>
