@@ -42,15 +42,15 @@ export default defineStackbitConfig({
                 {
                     title: "Accueil",
                     slug: "/",
-                    imageBefore: "/assets/fondindex.gif",  // Assurez-vous que ces images sont au bon endroit
-                    imageAfter: "/assets/fondhome.jpg",    // Assurez-vous que ces images sont au bon endroit
+                    imageBefore: "/assets/fondindex.gif",
+                    imageAfter: "/assets/fondhome.jpg",
                     content: "Page d'accueil avec du contenu personnalisé. Vous serez redirigé après avoir entré le mot de passe."
                 },
                 {
                     title: "À propos",
                     slug: "/about",
                     imageBefore: "/assets/fondindex.gif",
-                    imageAfter: "/assets/fondindex.gif",  // Fond identique avant et après
+                    imageAfter: "/assets/fondindex.gif",
                     content: "Information sur l'association Débrouillez-vous."
                 },
                 {
@@ -70,8 +70,8 @@ export default defineStackbitConfig({
                 {
                     title: "Agenda",
                     slug: "/shop",
-                    imageBefore: "/assets/fondhome.jpg",  // Assurez-vous que ces images sont au bon endroit
-                    imageAfter: "/assets/fondhome.jpg",    // Assurez-vous que ces images sont au bon endroit
+                    imageBefore: "/assets/fondhome.jpg",
+                    imageAfter: "/assets/fondhome.jpg",
                     content: "Page de l'agenda avec les dates importantes."
                 }
             ]
