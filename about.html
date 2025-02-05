@@ -6,6 +6,13 @@
   <title data-sb-field="aboutPageTitle">À propos</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <!-- Inclusion de Turbolinks pour les navigations partielles -->
+  <script src="https://unpkg.com/turbolinks"></script>
+  <script>
+    Turbolinks.start();
+  </script>
+  
   <style>
     body {
       margin: 0;
@@ -70,6 +77,11 @@
   </style>
 </head>
 <body>
+  <!-- Élément audio permanent pour la musique (ne sera pas rechargé grâce à Turbolinks) -->
+  <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
 
   <!-- Titre principal éditable -->
   <h1 data-sb-field="aboutHeader">qui sommes-nous ?</h1>
@@ -85,6 +97,5 @@
 
   <!-- Bouton de retour éditable -->
   <a href="index.html" class="about-button" data-sb-field="aboutButtonText">Retour à l'accueil</a>
-
 </body>
 </html>

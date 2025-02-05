@@ -6,6 +6,13 @@
   <!-- Titre éditable -->
   <title data-sb-field="shopPageTitle">Dates Importantes</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <!-- Inclusion de Turbolinks pour éviter les rechargements complets -->
+  <script src="https://unpkg.com/turbolinks"></script>
+  <script>
+    Turbolinks.start();
+  </script>
+  
   <style>
     /* Réinitialisation */
     *, *::before, *::after {
@@ -85,6 +92,11 @@
   </style>
 </head>
 <body>
+  <!-- Élément audio permanent pour la musique (le même id et attribut sur toutes les pages) -->
+  <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
 
   <!-- Conteneur éditable pour les dates importantes -->
   <div class="important-dates-container" data-sb-field="datesContainer">
@@ -101,6 +113,6 @@
 
   <!-- Bouton Retour à l'accueil éditable -->
   <a href="index.html" class="back-button" data-sb-field="shopBackButton">Retour à l'accueil</a>
-
+  
 </body>
 </html>
