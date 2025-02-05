@@ -128,7 +128,13 @@
       document.getElementById('blackout').style.opacity = '1'; // Affiche le fond noir
 
       setTimeout(function() {
-        window.location.href = 'home.html'; // Rediriger vers home.html après 2 secondes
+        // Si la page est chargée dans container.html (dans un iframe), changer la source de l'iframe
+        if(window.parent && window.parent !== window && window.parent.document.getElementById('contentFrame')) {
+          window.parent.document.getElementById('contentFrame').src = 'home.html';
+        } else {
+          // Sinon, rediriger normalement
+          window.location.href = 'home.html';
+        }
       }, 2000); // Après 2 secondes
     }
   </script>

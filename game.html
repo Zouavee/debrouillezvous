@@ -86,10 +86,6 @@
     const donaldImg = new Image();
     donaldImg.src = "assets/donald.jpg";
     
-    // Chargement de l'image "tuyau"
-    const pipeImg = new Image();
-    pipeImg.src = "assets/tuyau.jpg";
-    
     // Propriétés du personnage
     const bird = {
       x: canvas.width / 4,
@@ -101,10 +97,11 @@
       jumpStrength: -10
     };
     
-    // Variables pour les tuyaux
+    // Variables pour les tuyaux (dessinés sous forme de tours)
     let pipes = [];
     const pipeWidth = 80;
-    const gapHeight = 250;  // Espace vertical entre les tuyaux (augmenté)
+    // Définition de l'espacement vertical des tuyaux en fonction de la taille de l'écran.
+    let gapHeight = window.innerWidth < 768 ? 350 : 250;
     let pipeInterval = 1500;
     let lastPipeTime = 0;
     
@@ -117,6 +114,14 @@
     
     // Timer pour la transition
     let transitionTimer = 0;
+    
+    // Fonction pour générer un tuyau
+    function spawnPipe() {
+      let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
+      let topHeight = gapPosition;
+      let bottomHeight = canvas.height - gapPosition - gapHeight;
+      pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
+    }
     
     // Gestion du clavier
     document.addEventListener("keydown", function(e) {
@@ -187,7 +192,7 @@
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Gestion de l'affichage des boutons HTML selon l'état du jeu
+      // Affichage conditionnel des boutons HTML selon l'état du jeu
       if (gameState === STATE.START) {
         document.getElementById("homeLink").style.display = "block";
         document.getElementById("restartButton").style.display = "none";
@@ -218,7 +223,6 @@
                        mouseY >= rectY && mouseY <= rectY + rectHeight);
         
         if (hovered) {
-          // Survol : fond vert, texte noir
           ctx.fillStyle = "#00FF00";
           ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
           ctx.strokeStyle = "#00FF00";
@@ -226,7 +230,6 @@
           ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
           ctx.fillStyle = "black";
         } else {
-          // Normal : contour vert et texte vert
           ctx.strokeStyle = "#00FF00";
           ctx.lineWidth = 3;
           ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
@@ -268,43 +271,46 @@
         ctx.fillText(score, 20, 40);
         
       } else if (gameState === STATE.PLAYING) {
+        // On génère immédiatement un tuyau si aucun n'existe
+        if (pipes.length === 0) {
+          spawnPipe();
+          lastPipeTime = timestamp;
+        }
         // Physique du bird
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
         
         // Création périodique des tuyaux
         if (timestamp - lastPipeTime > pipeInterval) {
-          let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
-          let topHeight = gapPosition;
-          let bottomHeight = canvas.height - gapPosition - gapHeight;
-          pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
+          spawnPipe();
           lastPipeTime = timestamp;
         }
         
-        // Mise à jour et affichage des tuyaux
-        for (let i = 0; i < pipes.length; i++) {
-          pipes[i].x -= 2;
-          if (checkCollision(bird, pipes[i])) {
+        // Mise à jour et affichage des tuyaux (dessin en forme de tours)
+        pipes.forEach(pipe => {
+          pipe.x -= 2;
+          if (checkCollision(bird, pipe)) {
             gameState = STATE.GAMEOVER;
           }
-          if (!pipes[i].passed && pipes[i].x + pipeWidth < bird.x) {
+          if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
             score += 50;
-            pipes[i].passed = true;
+            pipe.passed = true;
           }
-        }
-        pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
-        
-        // Dessin des tuyaux avec l'image "tuyau.jpg"
-        pipes.forEach(pipe => {
-          // Dessin du tuyau supérieur (retourné verticalement)
-          ctx.save();
-          ctx.translate(pipe.x, pipe.top);
-          ctx.scale(1, -1);
-          ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipe.top);
-          ctx.restore();
-          // Dessin du tuyau inférieur (orientation normale)
-          ctx.drawImage(pipeImg, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+          // Dessin du tuyau supérieur (forme de tour)
+          ctx.fillStyle = "green";
+          ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+          ctx.strokeStyle = "#003300";
+          ctx.lineWidth = 4;
+          ctx.strokeRect(pipe.x, 0, pipeWidth, pipe.top);
+          // Dessin du tuyau inférieur (forme de tour)
+          ctx.fillStyle = "green";
+          ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+          ctx.strokeStyle = "#003300";
+          ctx.lineWidth = 4;
+          ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
+        // On filtre les tuyaux qui sont complètement sortis de l'écran
+        pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
         
         // Affichage du bird
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
@@ -326,7 +332,6 @@
         ctx.font = "60px 'Press Start 2P'";
         ctx.textAlign = "center";
         ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
-        // Les boutons "Retour à l'accueil" et "Recommencer" sont affichés via leur CSS
       }
       
       requestAnimationFrame(gameLoop);
@@ -337,6 +342,8 @@
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      // Mise à jour de gapHeight selon la taille de l'écran : plus grand sur petit écran
+      gapHeight = window.innerWidth < 768 ? 350 : 250;
     });
   </script>
 </body>

@@ -91,11 +91,21 @@
 </head>
 <body>
 
-  <!-- Audio pour la musique -->
+  <!-- Suppression de l'élément audio et du script associé car la musique est gérée par container.html -->
+  <!--
   <audio id="backgroundMusic" autoplay loop muted>
     <source src="assets/musique.mp3" type="audio/mp3">
     Votre navigateur ne supporte pas la lecture de fichiers audio.
   </audio>
+
+  <script>
+    window.onload = function() {
+      const backgroundMusic = document.getElementById('backgroundMusic');
+      backgroundMusic.muted = false;
+      backgroundMusic.play();
+    }
+  </script>
+  -->
 
   <div class="container">
     <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
@@ -103,23 +113,13 @@
     <!-- Boutons -->
     <a href="about.html" class="enter-button" id="aboutButton">About</a>
     <a href="contact.html" class="enter-button" id="contactButton">Contact</a>
-    <a href="shop.html" class="enter-button" id="agendaButton">Agenda</a> <!-- Changement ici, redirige vers shop.html -->
-
+    <a href="shop.html" class="enter-button" id="agendaButton">Agenda</a>
     <!-- Nouveau bouton "Make Tours Great Again" -->
-    <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a> <!-- Nouveau bouton ajouté -->
+    <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a>
   </div>
 
   <!-- Texte "ne clique pas n'importe où" en bas à droite, lien vers Instagram -->
   <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
-
-  <script>
-    // Une fois que la page est entièrement chargée, activer la musique
-    window.onload = function() {
-      const backgroundMusic = document.getElementById('backgroundMusic');
-      backgroundMusic.muted = false; // Retirer le muting pour que la musique commence à jouer
-      backgroundMusic.play(); // Lancer la musique
-    }
-  </script>
 
 </body>
 </html>

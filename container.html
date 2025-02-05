@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Container - Debrouillez-vous</title>
+  <style>
+    html, body, iframe {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      border: none;
+    }
+    /* L'audio est caché s'il n'est pas nécessaire à l'affichage */
+    #backgroundMusic {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- L'élément audio se lance ici dès le premier clic (sur index) et reste actif lors de la navigation -->
+  <audio id="backgroundMusic" autoplay loop>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
+
+  <!-- L'iframe affichera index.html au départ, puis home.html après clic -->
+  <iframe id="contentFrame" src="index.html"></iframe>
+</body>
+</html>
