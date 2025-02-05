@@ -6,17 +6,18 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    /* Styles globaux */
+    /* Réinitialisation */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
       font-family: 'Press Start 2P', cursive;
+      background-color: black;
     }
-    
-    /* ---------------------------
-       Écran d'entrée (Splash)
-    --------------------------- */
+    /* Écran d'entrée (Splash) */
     #splash {
       position: relative;
       width: 100%;
@@ -89,10 +90,7 @@
       z-index: 2;
       pointer-events: none;
     }
-    
-    /* ---------------------------
-       Écran d'accueil (Home)
-    --------------------------- */
+    /* Écran d'accueil (Home) */
     #home {
       display: none; /* Masqué tant qu'on n'est pas authentifié */
       width: 100%;
@@ -140,6 +138,38 @@
       color: black;
       box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
       transform: scale(1.1);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .password-container {
+        width: 200px;
+        padding: 12px;
+      }
+      .password-container label,
+      .password-container input,
+      .password-container button {
+        font-size: 1rem;
+      }
+      .enter-button {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+      }
+      .clignotant {
+        font-size: 1.5rem;
+      }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .password-container label,
+      .password-container input,
+      .password-container button {
+        font-size: 1.1rem;
+      }
+      .enter-button {
+        font-size: 1.3rem;
+      }
+      .clignotant {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>

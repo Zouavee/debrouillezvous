@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Virus - Debrouillez-vous</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Style - Debrouillez-vous</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    /* Réinitialisation et box-sizing */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
+      background-color: black;
+      font-family: 'Press Start 2P', cursive;
+      color: #00ff00;
     }
-
-    /* GIF en fond */
+    /* GIF en fond pour l'index/splash */
     .gif-background {
       position: fixed;
       top: 0;
@@ -23,8 +28,7 @@
       object-fit: cover;
       z-index: -1;
     }
-
-    /* Bloc de mot de passe en bas à droite */
+    /* Bloc de mot de passe pour l'index/splash */
     .password-container {
       position: fixed;
       bottom: 5%;
@@ -37,7 +41,6 @@
       text-align: center;
       width: 250px;
     }
-
     .password-container label {
       font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem;
@@ -45,7 +48,6 @@
       margin-bottom: 8px;
       text-transform: uppercase;
     }
-
     .password-container input {
       font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem;
@@ -57,7 +59,6 @@
       border: 2px solid #00ff00;
       border-radius: 5px;
     }
-
     .password-container button {
       font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem;
@@ -70,13 +71,11 @@
       text-transform: uppercase;
       width: 100%;
     }
-
     .password-container button:hover {
       background-color: #00ff00;
       color: black;
       box-shadow: 0 0 10px #00ff00;
     }
-
     /* Fond noir pour la transition */
     .blackout {
       position: fixed;
@@ -87,51 +86,24 @@
       background-color: black;
       opacity: 0;
       transition: opacity 2s ease-out;
-      z-index: 9999; /* Au-dessus de tout le reste */
-      pointer-events: none; /* Permet de ne pas bloquer les interactions avant la transition */
+      z-index: 9999;
+      pointer-events: none;
     }
-
-    /* Media Queries pour adapter le design aux petits écrans */
+    /* Media Queries pour petits écrans */
     @media (max-width: 768px) {
       .password-container {
         width: 200px;
         padding: 12px;
       }
-
       .password-container label,
       .password-container input,
       .password-container button {
         font-size: 1rem;
       }
     }
-
   </style>
 </head>
 <body>
-
-  <!-- GIF en fond -->
-  <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background">
-
-  <!-- Bloc de mot de passe -->
-  <div class="password-container">
-    <label for="password">Mot de passe</label>
-    <input type="password" id="password" placeholder="Entrez le mot de passe">
-    <button onclick="accessSite()">Accéder</button>
-  </div>
-
-  <!-- Fond noir pour la transition -->
-  <div class="blackout" id="blackout"></div>
-
-  <script>
-    function accessSite() {
-      // Lorsque l'on clique sur "Accéder", afficher le fond noir
-      document.getElementById('blackout').style.opacity = '1'; // Affiche le fond noir
-
-      setTimeout(function() {
-        window.location.href = 'home.html'; // Rediriger vers home.html après 2 secondes
-      }, 2000); // Après 2 secondes
-    }
-  </script>
-
+  <!-- Ce fichier CSS est destiné à être inclus dans vos autres fichiers via la balise <link rel="stylesheet" href="style.css"> -->
 </body>
 </html>
