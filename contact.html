@@ -43,7 +43,7 @@
       margin-bottom: 20px;
       font-size: 2rem;
     }
-    /* Appliquer la même typographie aux champs de saisie */
+    /* Typographie des champs */
     .contact-form input,
     .contact-form textarea {
       width: 100%;
@@ -60,7 +60,7 @@
       resize: vertical;
       min-height: 150px;
     }
-    /* Bouton Envoyer avec typographie similaire au titre */
+    /* Bouton Envoyer */
     .submit-button {
       background-color: black;
       color: #00ff00;
@@ -77,7 +77,7 @@
       background-color: #00ff00;
       color: black;
     }
-    /* Bouton pour revenir à l'accueil (en bas à gauche) */
+    /* Bouton Retour à l'accueil */
     .back-button {
       position: fixed;
       bottom: 5%;
@@ -96,7 +96,7 @@
       background-color: #00ff00;
       color: black;
     }
-    /* Bouton "ne clique pas n'importe où" (en bas à droite) */
+    /* Bouton Instagram */
     .link-text {
       position: fixed;
       bottom: 5%;
@@ -153,11 +153,11 @@
 
   <div class="container" data-sb-field="contactContainer">
     <div class="contact-form">
-      <!-- Titre de formulaire éditable -->
+      <!-- Titre éditable -->
       <h2 data-sb-field="contactHeader">Contactez-nous</h2>
       <!-- Formulaire Netlify Forms -->
       <form id="contactForm" name="contact" method="POST" data-netlify="true" data-sb-field="contactForm">
-        <!-- Champ caché nécessaire pour Netlify Forms -->
+        <!-- Champ caché obligatoire pour Netlify Forms -->
         <input type="hidden" name="form-name" value="contact">
         
         <input type="text" name="name" placeholder="Nom" required data-sb-field="contactInputName">
@@ -168,14 +168,43 @@
     </div>
   </div>
 
-  <!-- Bouton Retour à l'accueil (en bas à gauche) éditable -->
+  <!-- Bouton Retour à l'accueil éditable -->
   <a href="index.html" class="back-button" data-sb-field="contactBackButton">Retour à l'accueil</a>
   
-  <!-- Bouton "ne clique pas n'importe où" (en bas à droite) éditable -->
+  <!-- Bouton Instagram éditable -->
   <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text" data-sb-field="contactInstagramLink">ne clique pas n'importe où</a>
 
-  <!-- Suppression du JavaScript d'interception du formulaire pour Netlify Forms -->
-  <!-- Netlify Forms traitera la soumission lors du POST -->
-  
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Empêche l'envoi classique
+
+      const form = event.target;
+      const formData = new FormData(form);
+      // Convertir en URLSearchParams pour encoder les données
+      const encodedData = new URLSearchParams(formData).toString();
+
+      fetch("/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: encodedData
+      })
+      .then(response => {
+        if (response.ok) {
+          if (window.confirm("C'est envoyé ! Cliquez sur OK pour revenir à la page de contact.")) {
+            window.location.href = "contact.html";
+          }
+        } else {
+          alert("Erreur lors de l'envoi du formulaire. Veuillez réessayer.");
+        }
+      })
+      .catch(error => {
+        console.error("Erreur:", error);
+        alert("Erreur lors de l'envoi du formulaire. Veuillez réessayer.");
+      });
+    });
+  </script>
+
 </body>
 </html>
