@@ -43,7 +43,6 @@
       margin-bottom: 20px;
       font-size: 2rem;
     }
-    /* Typographie des champs */
     .contact-form input,
     .contact-form textarea {
       width: 100%;
@@ -60,7 +59,6 @@
       resize: vertical;
       min-height: 150px;
     }
-    /* Bouton Envoyer */
     .submit-button {
       background-color: black;
       color: #00ff00;
@@ -77,7 +75,6 @@
       background-color: #00ff00;
       color: black;
     }
-    /* Bouton Retour à l'accueil */
     .back-button {
       position: fixed;
       bottom: 5%;
@@ -96,7 +93,6 @@
       background-color: #00ff00;
       color: black;
     }
-    /* Bouton Instagram */
     .link-text {
       position: fixed;
       bottom: 5%;
@@ -112,7 +108,6 @@
     .link-text:hover {
       color: #ff0000;
     }
-    /* Responsive adjustments */
     @media (max-width: 768px) {
       .container {
         width: 95%;
@@ -153,13 +148,10 @@
 
   <div class="container" data-sb-field="contactContainer">
     <div class="contact-form">
-      <!-- Titre éditable -->
       <h2 data-sb-field="contactHeader">Contactez-nous</h2>
-      <!-- Formulaire Netlify Forms -->
+      <!-- Formulaire pour Netlify Forms -->
       <form id="contactForm" name="contact" method="POST" data-netlify="true" data-sb-field="contactForm">
-        <!-- Champ caché obligatoire pour Netlify Forms -->
         <input type="hidden" name="form-name" value="contact">
-        
         <input type="text" name="name" placeholder="Nom" required data-sb-field="contactInputName">
         <input type="text" name="subject" placeholder="Objet" required data-sb-field="contactInputSubject">
         <textarea name="message" placeholder="Votre message..." required data-sb-field="contactTextareaMessage"></textarea>
@@ -168,10 +160,7 @@
     </div>
   </div>
 
-  <!-- Bouton Retour à l'accueil éditable -->
   <a href="index.html" class="back-button" data-sb-field="contactBackButton">Retour à l'accueil</a>
-  
-  <!-- Bouton Instagram éditable -->
   <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text" data-sb-field="contactInstagramLink">ne clique pas n'importe où</a>
 
   <script>
@@ -180,7 +169,6 @@
 
       const form = event.target;
       const formData = new FormData(form);
-      // Convertir en URLSearchParams pour encoder les données
       const encodedData = new URLSearchParams(formData).toString();
 
       fetch("/", {
