@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Accueil</title>
-  
-  <!-- Ajouter le favicon (favicon.jpg en 32x32) -->
-  <link rel="icon" href="assets/favicon.jpg" type="image/jpeg">
-  <link rel="shortcut icon" href="assets/favicon.jpg" type="image/jpeg">
+
+  <!-- Ajouter le favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
 
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -160,38 +160,6 @@
       box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
       transform: scale(1.1);
     }
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .password-container {
-        width: 200px;
-        padding: 12px;
-      }
-      .password-container label,
-      .password-container input,
-      .password-container button {
-        font-size: 1rem;
-      }
-      .enter-button {
-        padding: 10px 20px;
-        font-size: 1.2rem;
-      }
-      .clignotant {
-        font-size: 1.5rem;
-      }
-    }
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .password-container label,
-      .password-container input,
-      .password-container button {
-        font-size: 1.1rem;
-      }
-      .enter-button {
-        font-size: 1.3rem;
-      }
-      .clignotant {
-        font-size: 1.8rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -209,7 +177,6 @@
 
   <!-- Écran d'accueil (Home) -->
   <div id="home">
-    <!-- Élément audio pour la musique -->
     <audio id="backgroundMusic" autoplay loop muted>
       <source src="assets/musique.mp3" type="audio/mp3">
       Votre navigateur ne supporte pas la lecture de fichiers audio.
