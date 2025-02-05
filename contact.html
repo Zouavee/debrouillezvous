@@ -155,8 +155,11 @@
     <div class="contact-form">
       <!-- Titre de formulaire éditable -->
       <h2 data-sb-field="contactHeader">Contactez-nous</h2>
-      <!-- Formulaire éditable -->
-      <form id="contactForm" data-sb-field="contactForm">
+      <!-- Formulaire Netlify Forms -->
+      <form id="contactForm" name="contact" method="POST" data-netlify="true" data-sb-field="contactForm">
+        <!-- Champ caché nécessaire pour Netlify Forms -->
+        <input type="hidden" name="form-name" value="contact">
+        
         <input type="text" name="name" placeholder="Nom" required data-sb-field="contactInputName">
         <input type="text" name="subject" placeholder="Objet" required data-sb-field="contactInputSubject">
         <textarea name="message" placeholder="Votre message..." required data-sb-field="contactTextareaMessage"></textarea>
@@ -171,25 +174,8 @@
   <!-- Bouton "ne clique pas n'importe où" (en bas à droite) éditable -->
   <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text" data-sb-field="contactInstagramLink">ne clique pas n'importe où</a>
 
-  <script>
-    document.getElementById('contactForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Empêche l'envoi classique du formulaire
-      var name = document.getElementsByName('name')[0].value;
-      var subject = document.getElementsByName('subject')[0].value;
-      var message = document.getElementsByName('message')[0].value;
-      
-      // Vérifier que tous les champs sont remplis (les attributs required devraient déjà le garantir)
-      if(name && subject && message) {
-        // Composer le lien mailto en incluant le nom et le message dans le corps
-        var mailtoLink = "mailto:debrouillezvous@gmail.com"
-          + "?subject=" + encodeURIComponent(subject)
-          + "&body=" + encodeURIComponent("Nom: " + name + "\n\n" + message);
-        window.location.href = mailtoLink;
-      } else {
-        alert("Veuillez remplir tous les champs.");
-      }
-    });
-  </script>
-
+  <!-- Suppression du JavaScript d'interception du formulaire pour Netlify Forms -->
+  <!-- Netlify Forms traitera la soumission lors du POST -->
+  
 </body>
 </html>
