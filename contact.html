@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Titre éditable -->
   <title data-sb-field="contactPageTitle">Contactez-nous</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- Inclusion de Turbolinks pour éviter les rechargements complets -->
+  <script src="https://unpkg.com/turbolinks"></script>
+  <script>
+    Turbolinks.start();
+  </script>
+  
   <style>
     /* Réinitialisation de base */
     *, *::before, *::after {
@@ -145,6 +153,11 @@
   </style>
 </head>
 <body>
+  <!-- Élément audio permanent pour la musique (il persistera grâce à Turbolinks) -->
+  <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
 
   <div class="container" data-sb-field="contactContainer">
     <div class="contact-form">
@@ -154,7 +167,6 @@
       <form id="contactForm" name="contact" method="POST" data-netlify="true" data-sb-field="contactForm">
         <!-- Champ caché obligatoire pour Netlify Forms -->
         <input type="hidden" name="form-name" value="contact">
-        
         <input type="text" name="name" placeholder="Nom" required data-sb-field="contactInputName">
         <input type="text" name="subject" placeholder="Objet" required data-sb-field="contactInputSubject">
         <textarea name="message" placeholder="Votre message..." required data-sb-field="contactTextareaMessage"></textarea>
@@ -163,19 +175,20 @@
     </div>
   </div>
 
+  <!-- Bouton Retour à l'accueil -->
   <a href="index.html" class="back-button" data-sb-field="contactBackButton">Retour à l'accueil</a>
+  <!-- Bouton Instagram -->
   <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text" data-sb-field="contactInstagramLink">ne clique pas n'importe où</a>
 
   <script>
-    // Intercepter la soumission du formulaire et soumettre les données à Netlify Forms
     document.getElementById('contactForm').addEventListener('submit', function(event) {
       event.preventDefault(); // Empêche l'envoi classique
-      
+
       const form = event.target;
       const formData = new FormData(form);
-      // Convertir en chaîne URL-encodée
+      // Convertir les données en chaîne URL-encodée
       const encodedData = new URLSearchParams(formData).toString();
-      
+
       fetch("/", {
         method: "POST",
         headers: {
@@ -185,8 +198,9 @@
       })
       .then(response => {
         if (response.ok) {
-          if (window.confirm("C'est envoyé ! Cliquez sur OK pour revenir à la page de contact.")) {
-            window.location.href = "contact.html";
+          // Afficher une popup de confirmation sans redirection vers une page blanche
+          if (window.confirm("C'est envoyé !")) {
+            Turbolinks.visit("contact.html");
           }
         } else {
           alert("Erreur lors de l'envoi du formulaire. Veuillez réessayer.");
@@ -198,6 +212,5 @@
       });
     });
   </script>
-
 </body>
 </html>

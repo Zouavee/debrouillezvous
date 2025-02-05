@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  <!-- Inclusion de Turbolinks pour éviter le rechargement complet des pages -->
+  <!-- Inclusion de Turbolinks pour éviter les rechargements complets -->
   <script src="https://unpkg.com/turbolinks"></script>
   <script>
     Turbolinks.start();
@@ -202,6 +202,12 @@
   </style>
 </head>
 <body>
+  <!-- Élément audio permanent (la musique ne sera pas rechargée grâce à Turbolinks) -->
+  <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
+    <source src="assets/musique.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
+  
   <!-- Écran d'entrée (Splash) éditable -->
   <div id="splash" data-sb-field="splash">
     <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background" data-sb-field="splashBackground">
@@ -215,15 +221,10 @@
 
   <!-- Écran d'accueil (Home) éditable -->
   <div id="home" data-sb-field="home">
-    <!-- Élément audio permanent pour la musique (l'attribut data-turbolinks-permanent permet de conserver l'audio entre les pages) -->
-    <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent data-sb-field="backgroundMusic">
-      <source src="assets/musique.mp3" type="audio/mp3">
-      Votre navigateur ne supporte pas la lecture de fichiers audio.
-    </audio>
     <div class="container" data-sb-field="homeContainer">
-      <!-- Texte clignotant éditable -->
-      <div class="clignotant" data-sb-field="homeBlinkingText">Article 15 : Débrouillez-vous pour survivre</div>
-      <!-- Boutons de navigation éditables -->
+      <div class="clignotant" data-sb-field="homeBlinkingText">
+        Article 15 : Débrouillez-vous pour survivre
+      </div>
       <a href="about.html" class="enter-button" id="aboutButton" data-sb-field="aboutButtonText">À propos</a>
       <a href="shop.html" class="enter-button" id="agendaButton" data-sb-field="agendaButtonText">Agenda</a>
       <a href="contact.html" class="enter-button" id="contactButton" data-sb-field="contactButtonText">Contactez-nous</a>
@@ -232,13 +233,15 @@
   </div>
 
   <script>
-    // Dès que la page se charge, vérifie l'authentification
-    window.addEventListener('load', function(){
-      if(sessionStorage.getItem('auth') === 'true'){
-        document.getElementById('splash').style.display = 'none';
-        document.getElementById('home').style.display = 'flex';
+    // Lors du chargement via Turbolinks, on masque le splash si l'utilisateur est authentifié.
+    document.addEventListener("turbolinks:load", function() {
+      if (sessionStorage.getItem('auth') === 'true') {
+        var splash = document.getElementById('splash');
+        var home = document.getElementById('home');
+        if (splash) splash.style.display = 'none';
+        if (home) home.style.display = 'flex';
         var audio = document.getElementById('backgroundMusic');
-        if(audio) {
+        if (audio) {
           audio.muted = false;
           audio.play().catch(function(error) {
             console.error("Erreur lors de la lecture de l'audio :", error);
@@ -248,7 +251,7 @@
     });
 
     function accessSite() {
-      // Effet de transition
+      // Transition : on lance l'effet de blackout
       document.getElementById('blackout').style.opacity = '1';
       var audio = document.getElementById('backgroundMusic');
       if (audio) {
@@ -259,7 +262,7 @@
       }
       // Enregistrer l'authentification
       sessionStorage.setItem('auth', 'true');
-      // Après 2 secondes, passer à l'écran d'accueil
+      // Après 2 secondes, masquer le splash et afficher l'écran home
       setTimeout(function() {
         document.getElementById('splash').style.display = 'none';
         document.getElementById('home').style.display = 'flex';
