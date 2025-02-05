@@ -22,7 +22,12 @@ export default defineStackbitConfig({
                         required: true
                     },
                     {
-                        name: "image",
+                        name: "imageBefore",
+                        type: "image",
+                        required: false
+                    },
+                    {
+                        name: "imageAfter",
                         type: "image",
                         required: false
                     },
@@ -37,31 +42,36 @@ export default defineStackbitConfig({
                 {
                     title: "Accueil",
                     slug: "/",
-                    image: "assets/fondhome.jpg",
-                    content: "Page d'accueil avec du contenu personnalisé."
+                    imageBefore: "assets/fondindex.gif",  // Avant de cliquer
+                    imageAfter: "assets/fondhome.jpg",    // Après avoir cliqué
+                    content: "Page d'accueil avec du contenu personnalisé. Vous serez redirigé après avoir entré le mot de passe."
                 },
                 {
                     title: "À propos",
                     slug: "/about",
-                    image: "assets/fondindex.gif",
+                    imageBefore: "assets/fondindex.gif",
+                    imageAfter: "assets/fondindex.gif",  // Aucune modification, fond pareil pour 'avant' et 'après'
                     content: "Information sur l'association Débrouillez-vous."
                 },
                 {
                     title: "Contact",
                     slug: "/contact",
-                    image: "assets/fondindex.gif",
+                    imageBefore: "assets/fondindex.gif",
+                    imageAfter: "assets/fondindex.gif",
                     content: "Formulaire de contact."
                 },
                 {
                     title: "Jeu",
                     slug: "/game",
-                    image: "assets/fondindex.gif",
+                    imageBefore: "assets/fondindex.gif",
+                    imageAfter: "assets/fondindex.gif",
                     content: "Jeu interactif de type arcade."
                 },
                 {
                     title: "Agenda",
                     slug: "/shop",
-                    image: "assets/fondhome.jpg",
+                    imageBefore: "assets/fondhome.jpg",
+                    imageAfter: "assets/fondhome.jpg",
                     content: "Page de l'agenda avec les dates importantes."
                 }
             ]
