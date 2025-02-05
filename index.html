@@ -11,6 +11,12 @@
 
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- Inclusion de Turbolinks pour éviter le rechargement complet des pages -->
+  <script src="https://unpkg.com/turbolinks"></script>
+  <script>
+    Turbolinks.start();
+  </script>
   
   <!-- Script pour vérifier l'authentification dès le chargement et ajouter une classe -->
   <script>
@@ -209,8 +215,8 @@
 
   <!-- Écran d'accueil (Home) éditable -->
   <div id="home" data-sb-field="home">
-    <!-- Élément audio pour la musique éditable -->
-    <audio id="backgroundMusic" autoplay loop muted data-sb-field="backgroundMusic">
+    <!-- Élément audio permanent pour la musique (l'attribut data-turbolinks-permanent permet de conserver l'audio entre les pages) -->
+    <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent data-sb-field="backgroundMusic">
       <source src="assets/musique.mp3" type="audio/mp3">
       Votre navigateur ne supporte pas la lecture de fichiers audio.
     </audio>
@@ -226,7 +232,7 @@
   </div>
 
   <script>
-    // Dès que la page se charge, vérifie l'authentification (la classe "authenticated" est ajoutée si authentifié)
+    // Dès que la page se charge, vérifie l'authentification
     window.addEventListener('load', function(){
       if(sessionStorage.getItem('auth') === 'true'){
         document.getElementById('splash').style.display = 'none';
