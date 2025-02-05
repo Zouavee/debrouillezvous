@@ -2,13 +2,14 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Flappy Trump</title>
+  <!-- Titre éditable -->
+  <title data-sb-field="gamePageTitle">Flappy Trump</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      /* Remplacez le fond noir par le gif "flappyfond.gif" */
+      /* Fond à partir du gif flappyfond.gif */
       background: url('assets/flappyfond.gif') no-repeat center center fixed;
       background-size: cover;
       overflow: hidden;
@@ -35,13 +36,12 @@
       background: #00FF00;
       color: black;
     }
-    /* Positionnement du bouton "Retour à l'accueil" */
+    /* Positionnement des boutons */
     #homeLink {
       bottom: 20px;
       right: 20px;
       display: none;
     }
-    /* Positionnement du bouton "Recommencer" */
     #restartButton {
       bottom: 20px;
       left: 20px;
@@ -62,11 +62,19 @@
   </style>
 </head>
 <body>
+  <!-- Élément caché pour la configuration éditable du jeu -->
+  <div id="gameConfig" style="display: none;" data-sb-field="gameConfig">
+    <!-- Texte éditable pour le bouton de démarrage (affiché dans le canvas) -->
+    <span id="startText" data-sb-field="gameStartText">Commencer</span>
+  </div>
+
+  <!-- Le canvas pour le jeu -->
   <canvas id="gameCanvas"></canvas>
-  <!-- Bouton "Retour à l'accueil" renvoie vers index.html -->
-  <a href="index.html" id="homeLink">Retour à l'accueil</a>
-  <!-- Bouton "Recommencer" -->
-  <button id="restartButton">Recommencer</button>
+
+  <!-- Bouton "Retour à l'accueil" éditable -->
+  <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
+  <!-- Bouton "Recommencer" éditable -->
+  <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
   
   <script>
     const canvas = document.getElementById("gameCanvas");
@@ -89,7 +97,7 @@
     };
     let gameState = STATE.START;
     
-    // Suivi de la souris
+    // Suivi de la souris pour le bouton "Commencer"
     let mouseX = 0, mouseY = 0;
     canvas.addEventListener("mousemove", function(e) {
       mouseX = e.clientX;
@@ -128,7 +136,7 @@
     // Timer de transition
     let transitionTimer = 0;
     
-    // Génération d'un tuyau
+    // Fonction pour générer un tuyau
     function spawnPipe() {
       let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
       let topHeight = gapPosition;
@@ -180,7 +188,7 @@
       document.getElementById("homeLink").style.display = "block";
     }
     
-    // Collision
+    // Vérification de collision
     function checkCollision(bird, pipe) {
       let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
       let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
@@ -195,9 +203,11 @@
       let deltaTime = timestamp - lastTime;
       lastTime = timestamp;
       
+      // Effacer le canvas
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
+      // Affichage conditionnel des boutons
       if (gameState === STATE.START) {
         document.getElementById("homeLink").style.display = "block";
         document.getElementById("restartButton").style.display = "none";
@@ -210,11 +220,12 @@
       }
       
       if (gameState === STATE.START) {
-        let text = "Commencer";
+        // Récupérer le texte éditable pour le bouton "Commencer"
+        let startText = document.getElementById("startText").textContent || "Commencer";
         ctx.font = "40px 'Press Start 2P'";
-        let metrics = ctx.measureText(text);
+        let metrics = ctx.measureText(startText);
         let textWidth = metrics.width;
-        let textHeight = 40;
+        let textHeight = 40; // approximation
         let paddingX = 20;
         let paddingY = 10;
         let rectWidth = textWidth + 2 * paddingX;
@@ -238,7 +249,7 @@
         }
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        ctx.fillText(startText, canvas.width / 2, canvas.height / 2);
         
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
@@ -290,12 +301,13 @@
             score += 50;
             pipe.passed = true;
           }
-          // Dessin des tuyaux
+          // Dessiner le tuyau supérieur
           ctx.fillStyle = "green";
           ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
           ctx.strokeRect(pipe.x, 0, pipeWidth, pipe.top);
+          // Dessiner le tuyau inférieur
           ctx.fillStyle = "green";
           ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
           ctx.strokeStyle = "#003300";
@@ -305,7 +317,6 @@
         pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
         
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
-        
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";

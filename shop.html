@@ -1,100 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dates Importantes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        /* Réinitialisation */
-        *, *::before, *::after {
-          box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Press Start 2P', cursive;
-            background: url('assets/fondhome.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #00ff00;
-            text-align: center;
-            overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .important-dates-container {
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            box-shadow: 0 0 15px #00ff00;
-            width: 90%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .important-dates-header {
-            font-size: 2rem;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-        }
-        .important-date {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-shadow: none;
-        }
-        .important-date span {
-            font-weight: bold;
-        }
-        /* Bouton Retour à l'accueil */
-        .back-button {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.2rem;
-            padding: 10px 20px;
-            background-color: black;
-            color: #00ff00;
-            border: 2px solid #00ff00;
-            border-radius: 5px;
-            text-decoration: none;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .back-button:hover {
-            background-color: #00ff00;
-            color: black;
-            transform: scale(1.1);
-        }
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .important-dates-header {
-            font-size: 1.8rem;
-          }
-          .important-date {
-            font-size: 1.2rem;
-          }
-          .back-button {
-            font-size: 1rem;
-            padding: 8px 16px;
-          }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Titre éditable -->
+  <title data-sb-field="shopPageTitle">Dates Importantes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* Réinitialisation */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: url('assets/fondhome.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #00ff00;
+      text-align: center;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .important-dates-container {
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ff00;
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .important-dates-header {
+      font-size: 2rem;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+    .important-date {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-shadow: none;
+    }
+    .important-date span {
+      font-weight: bold;
+    }
+    /* Bouton Retour à l'accueil */
+    .back-button {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .back-button:hover {
+      background-color: #00ff00;
+      color: black;
+      transform: scale(1.1);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .important-dates-header {
+        font-size: 1.8rem;
+      }
+      .important-date {
+        font-size: 1.2rem;
+      }
+      .back-button {
+        font-size: 1rem;
+        padding: 8px 16px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="important-dates-container">
-        <div class="important-dates-header">Dates Importantes</div>
-        <!-- Exemple de date importante -->
-        <div class="important-date">
-            <span>22 juin 2025 :</span> Débrouillez-vous pour survivre avec J9nueve
-        </div>
+  <!-- Conteneur éditable pour les dates importantes -->
+  <div class="important-dates-container" data-sb-field="datesContainer">
+    <!-- Titre éditable -->
+    <div class="important-dates-header" data-sb-field="datesHeader">
+      Dates Importantes
     </div>
+    <!-- Exemple de date importante éditable -->
+    <div class="important-date" data-sb-field="dateItem1">
+      <span data-sb-field="dateItem1Date">22 juin 2025 :</span>
+      <span data-sb-field="dateItem1Text"> Débrouillez-vous pour survivre avec J9nueve</span>
+    </div>
+  </div>
 
-    <!-- Bouton Retour à l'accueil qui renvoie vers index.html -->
-    <a href="index.html" class="back-button">Retour à l'accueil</a>
+  <!-- Bouton Retour à l'accueil éditable -->
+  <a href="index.html" class="back-button" data-sb-field="shopBackButton">Retour à l'accueil</a>
 
 </body>
 </html>
