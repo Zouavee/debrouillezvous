@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>À propos</title>
+  <title data-sb-field="aboutPageTitle">À propos</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -71,17 +71,20 @@
 </head>
 <body>
 
-  <h1>qui sommes-nous ?</h1>
+  <!-- Titre principal éditable -->
+  <h1 data-sb-field="aboutHeader">qui sommes-nous ?</h1>
 
-  <!-- Section à propos -->
-  <div class="about-container">
-    <div class="about-text">
-      <p>Débrouillez-vous est une association de rap underground engagée dans la lutte pour la survie. Nous ne proposons pas de solutions faciles, mais un art brut et authentique qui s'inspire de la rue et du combat pour la vérité.</p>
+  <!-- Section à propos éditable -->
+  <div class="about-container" data-sb-field="aboutContainer">
+    <div class="about-text" data-sb-field="aboutText">
+      <p data-sb-field="aboutParagraph">
+        Débrouillez-vous est une association de rap underground engagée dans la lutte pour la survie. Nous ne proposons pas de solutions faciles, mais un art brut et authentique qui s'inspire de la rue et du combat pour la vérité.
+      </p>
     </div>
   </div>
 
-  <!-- Bouton retour à l'accueil qui renvoie vers index.html -->
-  <a href="index.html" class="about-button">Retour à l'accueil</a>
+  <!-- Bouton de retour éditable -->
+  <a href="index.html" class="about-button" data-sb-field="aboutButtonText">Retour à l'accueil</a>
 
 </body>
 </html>

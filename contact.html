@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contactez-nous</title>
+  <title data-sb-field="contactPageTitle">Contactez-nous</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -151,24 +151,25 @@
 </head>
 <body>
 
-  <div class="container">
+  <div class="container" data-sb-field="contactContainer">
     <div class="contact-form">
-      <h2>Contactez-nous</h2>
-      <!-- Note : on a retiré l'attribut action pour gérer l'envoi via JavaScript -->
-      <form id="contactForm">
-        <input type="text" name="name" placeholder="Nom" required>
-        <input type="text" name="subject" placeholder="Objet" required>
-        <textarea name="message" placeholder="Votre message..." required></textarea>
-        <button type="submit" class="submit-button">Envoyer</button>
+      <!-- Titre de formulaire éditable -->
+      <h2 data-sb-field="contactHeader">Contactez-nous</h2>
+      <!-- Formulaire éditable -->
+      <form id="contactForm" data-sb-field="contactForm">
+        <input type="text" name="name" placeholder="Nom" required data-sb-field="contactInputName">
+        <input type="text" name="subject" placeholder="Objet" required data-sb-field="contactInputSubject">
+        <textarea name="message" placeholder="Votre message..." required data-sb-field="contactTextareaMessage"></textarea>
+        <button type="submit" class="submit-button" data-sb-field="contactSubmitButton">Envoyer</button>
       </form>
     </div>
   </div>
 
-  <!-- Bouton Retour à l'accueil (en bas à gauche) -->
-  <a href="index.html" class="back-button">Retour à l'accueil</a>
+  <!-- Bouton Retour à l'accueil (en bas à gauche) éditable -->
+  <a href="index.html" class="back-button" data-sb-field="contactBackButton">Retour à l'accueil</a>
   
-  <!-- Bouton "ne clique pas n'importe où" (en bas à droite) -->
-  <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text">ne clique pas n'importe où</a>
+  <!-- Bouton "ne clique pas n'importe où" (en bas à droite) éditable -->
+  <a href="https://www.instagram.com/debrouillezvous/" target="_blank" class="link-text" data-sb-field="contactInstagramLink">ne clique pas n'importe où</a>
 
   <script>
     document.getElementById('contactForm').addEventListener('submit', function(event) {

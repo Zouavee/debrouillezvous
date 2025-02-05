@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Accueil</title>
+  <!-- Titre éditable -->
+  <title data-sb-field="indexPageTitle">Accueil</title>
   
   <!-- Ajouter le favicon (favicon.ico) -->
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
@@ -195,36 +196,37 @@
   </style>
 </head>
 <body>
-
-  <!-- Écran d'entrée (Splash) -->
-  <div id="splash">
-    <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background">
-    <div class="password-container">
-      <label for="password">Mot de passe</label>
-      <input type="password" id="password" placeholder="Entrez le mot de passe">
-      <button onclick="accessSite()">Accéder</button>
+  <!-- Écran d'entrée (Splash) éditable -->
+  <div id="splash" data-sb-field="splash">
+    <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background" data-sb-field="splashBackground">
+    <div class="password-container" data-sb-field="passwordContainer">
+      <label for="password" data-sb-field="passwordLabel">Mot de passe</label>
+      <input type="password" id="password" placeholder="Entrez le mot de passe" data-sb-field="passwordInput">
+      <button onclick="accessSite()" data-sb-field="passwordButton">Accéder</button>
     </div>
-    <div class="blackout" id="blackout"></div>
+    <div class="blackout" id="blackout" data-sb-field="blackout"></div>
   </div>
 
-  <!-- Écran d'accueil (Home) -->
-  <div id="home">
-    <!-- Élément audio pour la musique -->
-    <audio id="backgroundMusic" autoplay loop muted>
+  <!-- Écran d'accueil (Home) éditable -->
+  <div id="home" data-sb-field="home">
+    <!-- Élément audio pour la musique éditable -->
+    <audio id="backgroundMusic" autoplay loop muted data-sb-field="backgroundMusic">
       <source src="assets/musique.mp3" type="audio/mp3">
       Votre navigateur ne supporte pas la lecture de fichiers audio.
     </audio>
-    <div class="container">
-      <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
-      <a href="about.html" class="enter-button" id="aboutButton">À propos</a>
-      <a href="shop.html" class="enter-button" id="agendaButton">Agenda</a>
-      <a href="contact.html" class="enter-button" id="contactButton">Contactez-nous</a>
-      <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a>
+    <div class="container" data-sb-field="homeContainer">
+      <!-- Texte clignotant éditable -->
+      <div class="clignotant" data-sb-field="homeBlinkingText">Article 15 : Débrouillez-vous pour survivre</div>
+      <!-- Boutons de navigation éditables -->
+      <a href="about.html" class="enter-button" id="aboutButton" data-sb-field="aboutButtonText">À propos</a>
+      <a href="shop.html" class="enter-button" id="agendaButton" data-sb-field="agendaButtonText">Agenda</a>
+      <a href="contact.html" class="enter-button" id="contactButton" data-sb-field="contactButtonText">Contactez-nous</a>
+      <a href="game.html" class="enter-button" id="gameButton" data-sb-field="gameButtonText">Make Tours Great Again</a>
     </div>
   </div>
 
   <script>
-    // Dès que la page se charge, vérifie l'authentification (la classe "authenticated" est déjà ajoutée grâce au script dans le head)
+    // Dès que la page se charge, vérifie l'authentification (la classe "authenticated" est ajoutée si authentifié)
     window.addEventListener('load', function(){
       if(sessionStorage.getItem('auth') === 'true'){
         document.getElementById('splash').style.display = 'none';
@@ -251,7 +253,7 @@
       }
       // Enregistrer l'authentification
       sessionStorage.setItem('auth', 'true');
-      // Après 2 secondes, bascule vers l'écran d'accueil
+      // Après 2 secondes, passer à l'écran d'accueil
       setTimeout(function() {
         document.getElementById('splash').style.display = 'none';
         document.getElementById('home').style.display = 'flex';
