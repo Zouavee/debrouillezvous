@@ -5,6 +5,22 @@
   <title>Debrouillez-vous - Accueil Fusionné</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <!-- Script pour vérifier l'authentification dès le chargement et ajouter une classe -->
+  <script>
+    (function(){
+      if(sessionStorage.getItem('auth') === 'true'){
+        document.documentElement.className += " authenticated";
+      }
+    })();
+  </script>
+  
+  <!-- CSS additionnel pour masquer immédiatement le splash si authentifié -->
+  <style>
+    .authenticated #splash { display: none !important; }
+    .authenticated #home { display: flex !important; }
+  </style>
+  
   <style>
     /* Réinitialisation */
     *, *::before, *::after {
@@ -92,7 +108,7 @@
     }
     /* Écran d'accueil (Home) */
     #home {
-      display: none; /* Masqué tant qu'on n'est pas authentifié */
+      display: none; /* Par défaut, l'écran home est masqué */
       width: 100%;
       height: 100vh;
       background: url('assets/fondhome.jpg') no-repeat center center fixed;
@@ -203,7 +219,7 @@
   </div>
 
   <script>
-    // Dès que la page se charge, on vérifie si l'utilisateur est déjà authentifié
+    // Dès que la page se charge, vérifie l'authentification (la classe "authenticated" est déjà ajoutée grâce au script dans le head)
     window.addEventListener('load', function(){
       if(sessionStorage.getItem('auth') === 'true'){
         document.getElementById('splash').style.display = 'none';
@@ -230,7 +246,7 @@
       }
       // Enregistrer l'authentification
       sessionStorage.setItem('auth', 'true');
-      // Après 2 secondes, on bascule vers l'écran d'accueil
+      // Après 2 secondes, bascule vers l'écran d'accueil
       setTimeout(function() {
         document.getElementById('splash').style.display = 'none';
         document.getElementById('home').style.display = 'flex';
