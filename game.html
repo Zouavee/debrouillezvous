@@ -9,7 +9,7 @@
     html, body {
       margin: 0;
       padding: 0;
-      /* Fond noir au lieu du gif */
+      /* Fond noir uniquement */
       background-color: black;
       overflow: hidden;
       height: 100%;
@@ -121,6 +121,7 @@
     // Tuyaux
     let pipes = [];
     const pipeWidth = 80;
+    // Conserver l'écart défini (les tailles varient et le gap permet d'ajuster la trajectoire)
     let gapHeight = window.innerWidth < 768 ? 350 : 250;
     let pipeInterval = 1500;
     let lastPipeTime = 0;
@@ -169,7 +170,7 @@
       restartGame();
     });
     
-    // Ajout d'un gestionnaire sur "Retour à l'accueil" pour arrêter la musique
+    // Gestionnaire sur "Retour à l'accueil" pour arrêter la musique
     const homeLink = document.getElementById("homeLink");
     homeLink.addEventListener("click", function() {
       bgMusic.pause();
