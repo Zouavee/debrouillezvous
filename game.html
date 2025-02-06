@@ -9,9 +9,8 @@
     html, body {
       margin: 0;
       padding: 0;
-      /* Fond à partir du gif flappyfond.gif */
-      background: url('assets/flappyfond.gif') no-repeat center center fixed;
-      background-size: cover;
+      /* Fond noir au lieu du gif */
+      background-color: black;
       overflow: hidden;
       height: 100%;
       font-family: 'Press Start 2P', cursive;
@@ -168,6 +167,12 @@
     const restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", function() {
       restartGame();
+    });
+    
+    // Ajout d'un gestionnaire sur "Retour à l'accueil" pour arrêter la musique
+    const homeLink = document.getElementById("homeLink");
+    homeLink.addEventListener("click", function() {
+      bgMusic.pause();
     });
     
     function startTransition() {
