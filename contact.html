@@ -116,6 +116,7 @@
     .link-text:hover {
       color: #ff0000;
     }
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       .container {
         width: 95%;
@@ -134,6 +135,13 @@
       .link-text {
         font-size: 1rem;
         padding: 8px 16px;
+      }
+      /* Réorganisation sur mobile : on décale le bouton Instagram vers le haut pour éviter la superposition */
+      .back-button {
+        bottom: 10px;
+      }
+      .link-text {
+        bottom: 60px;
       }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
@@ -198,7 +206,7 @@
       })
       .then(response => {
         if (response.ok) {
-          // Afficher une popup de confirmation sans redirection vers une page blanche
+          // Afficher une popup de confirmation et naviguer vers la page de contact via Turbolinks
           if (window.confirm("C'est envoyé !")) {
             Turbolinks.visit("contact.html");
           }
