@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <!-- Ajout du meta viewport pour une adaptation mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Titre éditable -->
   <title data-sb-field="gamePageTitle">Flappy Trump</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -132,12 +134,10 @@
       jumpStrength: -10
     };
     
-    // Tuyaux
-    let pipes = [];
+    // Ajustement du gap selon la taille de l'écran
+    // Sur petit écran, le gap est augmenté (300) pour faciliter le passage
+    let gapHeight = window.innerWidth < 768 ? 300 : 200;
     const pipeWidth = 80;
-    // Sur petit écran, on réduit le gap pour augmenter la difficulté, 
-    // et sur grand écran, on le réduit encore pour rendre le jeu plus difficile.
-    let gapHeight = window.innerWidth < 768 ? 250 : 200;
     let pipeInterval = 1500;
     let lastPipeTime = 0;
     
@@ -158,6 +158,9 @@
       let bottomHeight = canvas.height - gapPosition - gapHeight;
       pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
     }
+    
+    // Tuyaux
+    let pipes = [];
     
     // Gestion du clavier
     document.addEventListener("keydown", function(e) {
@@ -332,7 +335,7 @@
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      gapHeight = window.innerWidth < 768 ? 250 : 200;
+      gapHeight = window.innerWidth < 768 ? 300 : 200;
     });
     
     // Vérification de collision
