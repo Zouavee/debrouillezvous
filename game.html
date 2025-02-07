@@ -19,7 +19,7 @@
       display: block;
     }
     /* Boutons interactifs */
-    #homeLink, #restartButton {
+    #homeLink, #restartButton, #startButton {
       font-family: 'Press Start 2P', cursive;
       color: #00FF00;
       text-decoration: none;
@@ -31,7 +31,7 @@
       z-index: 10;
       position: absolute;
     }
-    #homeLink:hover, #restartButton:hover {
+    #homeLink:hover, #restartButton:hover, #startButton:hover {
       background: #00FF00;
       color: black;
     }
@@ -46,15 +46,27 @@
       left: 20px;
       display: none;
     }
+    /* Bouton "Commencer" centré sur l'écran */
+    #startButton {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      #homeLink, #restartButton {
+      #homeLink, #restartButton, #startButton {
         font-size: 0.9rem;
         padding: 8px;
       }
+      /* Pour éviter que "Recommencer" ne chevauche "Retour à l'accueil" sur petit écran */
+      #restartButton {
+        bottom: 80px;
+        left: 20px;
+      }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
-      #homeLink, #restartButton {
+      #homeLink, #restartButton, #startButton {
         font-size: 1rem;
       }
     }
@@ -63,7 +75,7 @@
 <body>
   <!-- Élément caché pour la configuration éditable du jeu -->
   <div id="gameConfig" style="display: none;" data-sb-field="gameConfig">
-    <!-- Texte éditable pour le bouton de démarrage (affiché dans le canvas) -->
+    <!-- Texte éditable pour le bouton de démarrage (affiché auparavant dans le canvas) -->
     <span id="startText" data-sb-field="gameStartText">Commencer</span>
   </div>
 
@@ -74,6 +86,8 @@
   <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
   <!-- Bouton "Recommencer" éditable -->
   <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
+  <!-- Nouveau bouton "Commencer" en dehors du canvas -->
+  <button id="startButton">Commencer</button>
   
   <script>
     const canvas = document.getElementById("gameCanvas");
@@ -96,7 +110,7 @@
     };
     let gameState = STATE.START;
     
-    // Suivi de la souris pour le bouton "Commencer"
+    // Suivi de la souris (non utilisé pour le nouveau bouton HTML)
     let mouseX = 0, mouseY = 0;
     canvas.addEventListener("mousemove", function(e) {
       mouseX = e.clientX;
@@ -121,8 +135,9 @@
     // Tuyaux
     let pipes = [];
     const pipeWidth = 80;
-    // Conserver l'écart défini (les tailles varient et le gap permet d'ajuster la trajectoire)
-    let gapHeight = window.innerWidth < 768 ? 350 : 250;
+    // Sur petit écran, on réduit le gap pour augmenter la difficulté, 
+    // et sur grand écran, on le réduit encore pour rendre le jeu plus difficile.
+    let gapHeight = window.innerWidth < 768 ? 250 : 200;
     let pipeInterval = 1500;
     let lastPipeTime = 0;
     
@@ -154,14 +169,20 @@
       }
     });
     
-    // Clic sur le canvas pour démarrer ou sauter
+    // Clic sur le canvas pour sauter pendant la partie
     canvas.addEventListener("click", function() {
-      if (gameState === STATE.START) {
-        bgMusic.play();
-        startTransition();
-      } else if (gameState === STATE.PLAYING) {
+      if (gameState === STATE.PLAYING) {
         bird.velocity = bird.jumpStrength;
       }
+    });
+    
+    // Bouton "Commencer" (nouveau bouton HTML)
+    const startButton = document.getElementById("startButton");
+    startButton.style.display = "block";
+    startButton.addEventListener("click", function() {
+      bgMusic.play();
+      startButton.style.display = "none";
+      startTransition();
     });
     
     // Bouton "Recommencer"
@@ -170,7 +191,7 @@
       restartGame();
     });
     
-    // Gestionnaire sur "Retour à l'accueil" pour arrêter la musique
+    // Bouton "Retour à l'accueil" : arrêt de la musique lors du clic
     const homeLink = document.getElementById("homeLink");
     homeLink.addEventListener("click", function() {
       bgMusic.pause();
@@ -190,18 +211,9 @@
       autoJumpCount = 0;
       autoJumpTimer = 0;
       lastPipeTime = 0;
-      document.getElementById("restartButton").style.display = "none";
-      document.getElementById("homeLink").style.display = "block";
-    }
-    
-    // Vérification de collision
-    function checkCollision(bird, pipe) {
-      let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
-      let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
-      let bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
-      if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
-      if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
-      return false;
+      restartButton.style.display = "none";
+      homeLink.style.display = "block";
+      startButton.style.display = "block";
     }
     
     let lastTime = 0;
@@ -213,50 +225,23 @@
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Affichage conditionnel des boutons
+      // Affichage conditionnel des boutons en fonction de l'état du jeu
       if (gameState === STATE.START) {
-        document.getElementById("homeLink").style.display = "block";
-        document.getElementById("restartButton").style.display = "none";
+        homeLink.style.display = "block";
+        restartButton.style.display = "none";
+        startButton.style.display = "block";
       } else if (gameState === STATE.GAMEOVER) {
-        document.getElementById("homeLink").style.display = "block";
-        document.getElementById("restartButton").style.display = "block";
+        homeLink.style.display = "block";
+        restartButton.style.display = "block";
+        startButton.style.display = "none";
       } else {
-        document.getElementById("homeLink").style.display = "none";
-        document.getElementById("restartButton").style.display = "none";
+        homeLink.style.display = "none";
+        restartButton.style.display = "none";
+        startButton.style.display = "none";
       }
       
       if (gameState === STATE.START) {
-        // Récupérer le texte éditable pour le bouton "Commencer"
-        let startText = document.getElementById("startText").textContent || "Commencer";
-        ctx.font = "40px 'Press Start 2P'";
-        let metrics = ctx.measureText(startText);
-        let textWidth = metrics.width;
-        let textHeight = 40; // approximation
-        let paddingX = 20;
-        let paddingY = 10;
-        let rectWidth = textWidth + 2 * paddingX;
-        let rectHeight = textHeight + 2 * paddingY;
-        let rectX = canvas.width / 2 - rectWidth / 2;
-        let rectY = canvas.height / 2 - rectHeight / 2;
-        let hovered = (mouseX >= rectX && mouseX <= rectX + rectWidth &&
-                       mouseY >= rectY && mouseY <= rectY + rectHeight);
-        if (hovered) {
-          ctx.fillStyle = "#00FF00";
-          ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
-          ctx.strokeStyle = "#00FF00";
-          ctx.lineWidth = 3;
-          ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-          ctx.fillStyle = "black";
-        } else {
-          ctx.strokeStyle = "#00FF00";
-          ctx.lineWidth = 3;
-          ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-          ctx.fillStyle = "#00FF00";
-        }
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(startText, canvas.width / 2, canvas.height / 2);
-        
+        // Le bouton "Commencer" est géré par l'élément HTML.
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
         let alpha = Math.min(1, transitionTimer / 500);
@@ -284,7 +269,6 @@
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
-        
       } else if (gameState === STATE.PLAYING) {
         if (pipes.length === 0) {
           spawnPipe();
@@ -331,12 +315,14 @@
         if (bird.y + bird.height > canvas.height) {
           gameState = STATE.GAMEOVER;
         }
-        
       } else if (gameState === STATE.GAMEOVER) {
         ctx.fillStyle = "#00FF00";
         ctx.font = "60px 'Press Start 2P'";
         ctx.textAlign = "center";
         ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
+        // Affichage du score en dessous du message de défaite
+        ctx.font = "40px 'Press Start 2P'";
+        ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 60);
       }
       
       requestAnimationFrame(gameLoop);
@@ -346,8 +332,18 @@
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      gapHeight = window.innerWidth < 768 ? 350 : 250;
+      gapHeight = window.innerWidth < 768 ? 250 : 200;
     });
+    
+    // Vérification de collision
+    function checkCollision(bird, pipe) {
+      let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
+      let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
+      let bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
+      if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
+      if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
+      return false;
+    }
   </script>
 </body>
 </html>
