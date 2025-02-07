@@ -61,6 +61,15 @@
       object-fit: cover;
       z-index: -2;
     }
+    
+    /* Adaptation du fond pour écrans de téléphone */
+    @media (max-width: 768px) {
+      .gif-background {
+        width: 100vw;
+        height: 100vh;
+      }
+    }
+
     .password-container {
       position: fixed;
       bottom: 5%;
