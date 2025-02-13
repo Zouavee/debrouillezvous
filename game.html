@@ -2,8 +2,6 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <!-- Ajout du meta viewport pour une adaptation mobile -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Titre éditable -->
   <title data-sb-field="gamePageTitle">Flappy Trump</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -53,7 +51,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      display: none;
+      display: block;
     }
     /* Responsive adjustments */
     @media (max-width: 768px) {
@@ -61,7 +59,6 @@
         font-size: 0.9rem;
         padding: 8px;
       }
-      /* Pour éviter que "Recommencer" ne chevauche "Retour à l'accueil" sur petit écran */
       #restartButton {
         bottom: 80px;
         left: 20px;
@@ -75,27 +72,41 @@
   </style>
 </head>
 <body>
-  <!-- Élément caché pour la configuration éditable du jeu -->
+  <!-- Élément audio permanent pour la musique (reste inchangé grâce à Turbolinks) -->
+  <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
+    <source src="assets/flappy.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la lecture de fichiers audio.
+  </audio>
+  
+  <!-- Élément de configuration éditable (texte pour le bouton "Commencer") -->
   <div id="gameConfig" style="display: none;" data-sb-field="gameConfig">
-    <!-- Texte éditable pour le bouton de démarrage (affiché auparavant dans le canvas) -->
     <span id="startText" data-sb-field="gameStartText">Commencer</span>
   </div>
-
+  
   <!-- Le canvas pour le jeu -->
   <canvas id="gameCanvas"></canvas>
-
+  
   <!-- Bouton "Retour à l'accueil" éditable -->
   <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
   <!-- Bouton "Recommencer" éditable -->
   <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
-  <!-- Nouveau bouton "Commencer" en dehors du canvas -->
-  <button id="startButton">Commencer</button>
   
   <script>
+    // --- Définition des constantes ---
+    const PIPE_WIDTH = 80;
+    const GAP_HEIGHT_MOBILE = 350;
+    const GAP_HEIGHT_DESKTOP = 250;
+    const PIPE_INTERVAL_MOBILE = 2000;  // Augmenté pour espacer davantage les paires sur mobile
+    const PIPE_INTERVAL_DESKTOP = 1500;
+    
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    
+    // Définir le gapHeight et pipeInterval en fonction de la taille d'écran
+    let gapHeight = window.innerWidth < 768 ? GAP_HEIGHT_MOBILE : GAP_HEIGHT_DESKTOP;
+    let pipeInterval = window.innerWidth < 768 ? PIPE_INTERVAL_MOBILE : PIPE_INTERVAL_DESKTOP;
     
     // Musique de fond
     const bgMusic = new Audio("assets/flappy.mp3");
@@ -112,18 +123,57 @@
     };
     let gameState = STATE.START;
     
-    // Suivi de la souris (non utilisé pour le nouveau bouton HTML)
+    // Variables pour la gestion du jeu
     let mouseX = 0, mouseY = 0;
-    canvas.addEventListener("mousemove", function(e) {
+    let score = 0;
+    let lastPipeTime = 0;
+    let autoJumpCount = 0;
+    let autoJumpTimer = 0;
+    let transitionTimer = 0;
+    
+    // Déclaration unique du tableau de tuyaux
+    let pipes = [];
+    
+    // --- Événements ---
+    canvas.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     });
     
-    // Chargement de l'image "donald"
-    const donaldImg = new Image();
-    donaldImg.src = "assets/donald.jpg";
+    // Écouteur tactile pour mobile
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      if (gameState === STATE.START) {
+        bgMusic.play();
+        startTransition();
+      } else if (gameState === STATE.PLAYING) {
+        bird.velocity = bird.jumpStrength;
+      }
+    });
     
-    // Propriétés du "bird"
+    // Clic sur le canvas (pour desktop)
+    canvas.addEventListener("click", () => {
+      if (gameState === STATE.START) {
+        bgMusic.play();
+        startTransition();
+      } else if (gameState === STATE.PLAYING) {
+        bird.velocity = bird.jumpStrength;
+      }
+    });
+    
+    // Bouton "Recommencer"
+    const restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", () => {
+      restartGame();
+    });
+    
+    // Bouton "Retour à l'accueil" : arrêter la musique
+    const homeLink = document.getElementById("homeLink");
+    homeLink.addEventListener("click", () => {
+      bgMusic.pause();
+    });
+    
+    // --- Propriétés du "bird" ---
     const bird = {
       x: canvas.width / 4,
       y: canvas.height / 2,
@@ -134,122 +184,35 @@
       jumpStrength: -10
     };
     
-    // Ajustement du gap selon la taille de l'écran
-    // Sur petit écran, le gap est augmenté (300) pour faciliter le passage
-    let gapHeight = window.innerWidth < 768 ? 300 : 200;
-    const pipeWidth = 80;
-    let pipeInterval = 1500;
-    let lastPipeTime = 0;
+    // Chargement de l'image "donald"
+    const donaldImg = new Image();
+    donaldImg.src = "assets/donald.jpg";
     
-    // Score
-    let score = 0;
+    // --- Fonctions de jeu ---
     
-    // Variables pour l'auto-jump
-    let autoJumpCount = 0;
-    let autoJumpTimer = 0;
-    
-    // Timer de transition
-    let transitionTimer = 0;
-    
-    // Fonction pour générer un tuyau
     function spawnPipe() {
-      let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
-      let topHeight = gapPosition;
-      let bottomHeight = canvas.height - gapPosition - gapHeight;
+      // Calculer une position de gap aléatoire
+      const gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
+      const topHeight = gapPosition;
+      const bottomHeight = canvas.height - gapPosition - gapHeight;
       pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
     }
     
-    // Tuyaux
-    let pipes = [];
-    
-    // Gestion du clavier
-    document.addEventListener("keydown", function(e) {
-      if (e.code === "Space") {
-        e.preventDefault();
-        if (gameState === STATE.PLAYING) {
-          bird.velocity = bird.jumpStrength;
-        }
-      }
-    });
-    
-    // Clic sur le canvas pour sauter pendant la partie
-    canvas.addEventListener("click", function() {
-      if (gameState === STATE.PLAYING) {
-        bird.velocity = bird.jumpStrength;
-      }
-    });
-    
-    // Bouton "Commencer" (nouveau bouton HTML)
-    const startButton = document.getElementById("startButton");
-    startButton.style.display = "block";
-    startButton.addEventListener("click", function() {
-      bgMusic.play();
-      startButton.style.display = "none";
-      startTransition();
-    });
-    
-    // Bouton "Recommencer"
-    const restartButton = document.getElementById("restartButton");
-    restartButton.addEventListener("click", function() {
-      restartGame();
-    });
-    
-    // Bouton "Retour à l'accueil" : arrêt de la musique lors du clic
-    const homeLink = document.getElementById("homeLink");
-    homeLink.addEventListener("click", function() {
-      bgMusic.pause();
-    });
-    
-    function startTransition() {
-      gameState = STATE.TRANSITION;
-      transitionTimer = 0;
+    function checkCollision(b, p) {
+      const { x: bx, y: by, width: bw, height: bh } = b;
+      const { x: px, top: pt, bottom: pb } = p;
+      // Collision avec le tuyau supérieur
+      if (bx < px + PIPE_WIDTH && bx + bw > px && by < pt) return true;
+      // Collision avec le tuyau inférieur
+      if (bx < px + PIPE_WIDTH && bx + bw > px && by + bh > canvas.height - pb) return true;
+      return false;
     }
     
-    function restartGame() {
-      gameState = STATE.START;
-      bird.y = canvas.height / 2;
-      bird.velocity = 0;
-      pipes = [];
-      score = 0;
-      autoJumpCount = 0;
-      autoJumpTimer = 0;
-      lastPipeTime = 0;
-      restartButton.style.display = "none";
-      homeLink.style.display = "block";
-      startButton.style.display = "block";
-    }
-    
-    let lastTime = 0;
-    function gameLoop(timestamp) {
-      let deltaTime = timestamp - lastTime;
-      lastTime = timestamp;
-      
-      // Effacer le canvas
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Affichage conditionnel des boutons en fonction de l'état du jeu
+    function updateGame(deltaTime) {
       if (gameState === STATE.START) {
-        homeLink.style.display = "block";
-        restartButton.style.display = "none";
-        startButton.style.display = "block";
-      } else if (gameState === STATE.GAMEOVER) {
-        homeLink.style.display = "block";
-        restartButton.style.display = "block";
-        startButton.style.display = "none";
-      } else {
-        homeLink.style.display = "none";
-        restartButton.style.display = "none";
-        startButton.style.display = "none";
-      }
-      
-      if (gameState === STATE.START) {
-        // Le bouton "Commencer" est géré par l'élément HTML.
+        // Rien à mettre à jour pour l'instant
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
-        let alpha = Math.min(1, transitionTimer / 500);
-        ctx.fillStyle = "rgba(0, 0, 0," + alpha + ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         if (transitionTimer >= 500) {
           gameState = STATE.AUTO_JUMP;
           autoJumpTimer = 0;
@@ -267,66 +230,105 @@
         }
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
+      } else if (gameState === STATE.PLAYING) {
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+        // Générer un tuyau si nécessaire
+        if (pipes.length === 0 || (performance.now() - lastPipeTime > pipeInterval)) {
+          spawnPipe();
+          lastPipeTime = performance.now();
+        }
+        // Mettre à jour les tuyaux
+        pipes.forEach(p => {
+          p.x -= 2;
+          if (!p.passed && p.x + PIPE_WIDTH < bird.x) {
+            score += 50;
+            p.passed = true;
+          }
+          if (checkCollision(bird, p)) {
+            gameState = STATE.GAMEOVER;
+          }
+        });
+        // Supprimer les tuyaux hors écran
+        pipes = pipes.filter(p => p.x + PIPE_WIDTH > 0);
+      }
+    }
+    
+    function drawGame() {
+      // Effacer le canvas
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      if (gameState === STATE.START) {
+        // Affichage du bouton "Commencer" sur le canvas
+        let startText = document.getElementById("startText").textContent || "Commencer";
+        ctx.font = "40px 'Press Start 2P'";
+        let metrics = ctx.measureText(startText);
+        let textWidth = metrics.width;
+        let paddingX = 20, paddingY = 10;
+        let rectWidth = textWidth + 2 * paddingX;
+        let rectHeight = 40 + 2 * paddingY;
+        let rectX = canvas.width / 2 - rectWidth / 2;
+        let rectY = canvas.height / 2 - rectHeight / 2;
+        // Dessiner le bouton
+        ctx.strokeStyle = "#00FF00";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+        ctx.fillStyle = "#00FF00";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(startText, canvas.width / 2, canvas.height / 2);
+      } else if (gameState === STATE.TRANSITION) {
+        let alpha = Math.min(1, transitionTimer / 500);
+        ctx.fillStyle = "rgba(0, 0, 0," + alpha + ")";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else if (gameState === STATE.AUTO_JUMP) {
+        // Dessiner l'oiseau pendant l'auto-jump
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
       } else if (gameState === STATE.PLAYING) {
-        if (pipes.length === 0) {
-          spawnPipe();
-          lastPipeTime = timestamp;
-        }
-        bird.velocity += bird.gravity;
-        bird.y += bird.velocity;
-        
-        if (timestamp - lastPipeTime > pipeInterval) {
-          spawnPipe();
-          lastPipeTime = timestamp;
-        }
-        
-        pipes.forEach(pipe => {
-          pipe.x -= 2;
-          if (checkCollision(bird, pipe)) {
-            gameState = STATE.GAMEOVER;
-          }
-          if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
-            score += 50;
-            pipe.passed = true;
-          }
-          // Dessiner le tuyau supérieur
+        // Dessiner les tuyaux
+        pipes.forEach(p => {
+          // Tuyau supérieur
           ctx.fillStyle = "green";
-          ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+          ctx.fillRect(p.x, 0, PIPE_WIDTH, p.top);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
-          ctx.strokeRect(pipe.x, 0, pipeWidth, pipe.top);
-          // Dessiner le tuyau inférieur
+          ctx.strokeRect(p.x, 0, PIPE_WIDTH, p.top);
+          // Tuyau inférieur
           ctx.fillStyle = "green";
-          ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+          ctx.fillRect(p.x, canvas.height - p.bottom, PIPE_WIDTH, p.bottom);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
-          ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+          ctx.strokeRect(p.x, canvas.height - p.bottom, PIPE_WIDTH, p.bottom);
         });
-        pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
-        
+        // Dessiner l'oiseau
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
+        // Afficher le score
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
-        
-        if (bird.y + bird.height > canvas.height) {
-          gameState = STATE.GAMEOVER;
-        }
       } else if (gameState === STATE.GAMEOVER) {
         ctx.fillStyle = "#00FF00";
         ctx.font = "60px 'Press Start 2P'";
         ctx.textAlign = "center";
         ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
-        // Affichage du score en dessous du message de défaite
         ctx.font = "40px 'Press Start 2P'";
         ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 60);
       }
+    }
+    
+    let previousTimestamp = 0;
+    function gameLoop(timestamp) {
+      const deltaTime = timestamp - previousTimestamp;
+      previousTimestamp = timestamp;
+      
+      updateGame(deltaTime);
+      drawGame();
       
       requestAnimationFrame(gameLoop);
     }
@@ -335,18 +337,9 @@
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      gapHeight = window.innerWidth < 768 ? 300 : 200;
+      gapHeight = window.innerWidth < 768 ? 350 : 250;
+      pipeInterval = window.innerWidth < 768 ? PIPE_INTERVAL_MOBILE : PIPE_INTERVAL_DESKTOP;
     });
-    
-    // Vérification de collision
-    function checkCollision(bird, pipe) {
-      let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
-      let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
-      let bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
-      if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
-      if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
-      return false;
-    }
   </script>
 </body>
 </html>
