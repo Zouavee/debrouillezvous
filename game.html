@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <!-- Adaptation mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Titre éditable -->
   <title data-sb-field="gamePageTitle">Flappy Trump</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -9,7 +11,6 @@
     html, body {
       margin: 0;
       padding: 0;
-      /* Fond noir uniquement */
       background-color: black;
       overflow: hidden;
       height: 100%;
@@ -18,8 +19,39 @@
     canvas {
       display: block;
     }
-    /* Boutons interactifs */
-    #homeLink, #restartButton, #startButton {
+    /* Bouton "Commencer" centré sur l'écran */
+    #startButton {
+      color: #00FF00;
+      text-decoration: none;
+      background: transparent;
+      border: 2px solid #00FF00;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    #startButton:hover {
+      background: #00FF00;
+      color: black;
+    }
+    /* Conteneur pour les boutons en fin de partie */
+    #gameOverContainer {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    #gameOverContainer button,
+    #gameOverContainer a {
       font-family: 'Press Start 2P', cursive;
       color: #00FF00;
       text-decoration: none;
@@ -28,92 +60,88 @@
       padding: 10px;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
-      z-index: 10;
-      position: absolute;
     }
-    #homeLink:hover, #restartButton:hover, #startButton:hover {
+    #gameOverContainer button:hover,
+    #gameOverContainer a:hover {
       background: #00FF00;
       color: black;
     }
-    /* Positionnement des boutons */
-    #homeLink {
-      bottom: 20px;
-      right: 20px;
-      display: none;
-    }
-    #restartButton {
-      bottom: 20px;
-      left: 20px;
-      display: none;
-    }
-    /* Bouton "Commencer" centré sur l'écran */
-    #startButton {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: block;
-    }
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      #homeLink, #restartButton, #startButton {
+      #startButton, 
+      #gameOverContainer button, 
+      #gameOverContainer a {
         font-size: 0.9rem;
         padding: 8px;
       }
-      #restartButton {
-        bottom: 80px;
-        left: 20px;
-      }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
-      #homeLink, #restartButton, #startButton {
+      #startButton, 
+      #gameOverContainer button, 
+      #gameOverContainer a {
         font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Élément audio permanent pour la musique (reste inchangé grâce à Turbolinks) -->
-  <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
-    <source src="assets/flappy.mp3" type="audio/mp3">
-    Votre navigateur ne supporte pas la lecture de fichiers audio.
-  </audio>
-  
-  <!-- Élément de configuration éditable (texte pour le bouton "Commencer") -->
+  <!-- Élément de configuration éditable -->
   <div id="gameConfig" style="display: none;" data-sb-field="gameConfig">
     <span id="startText" data-sb-field="gameStartText">Commencer</span>
   </div>
-  
-  <!-- Le canvas pour le jeu -->
+
+  <!-- Canvas du jeu -->
   <canvas id="gameCanvas"></canvas>
-  
-  <!-- Bouton "Retour à l'accueil" éditable -->
-  <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
-  <!-- Bouton "Recommencer" éditable -->
-  <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
+
+  <!-- Conteneur pour les boutons de fin de partie -->
+  <div id="gameOverContainer">
+    <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
+    <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
+  </div>
+  <!-- Bouton "Commencer" -->
+  <button id="startButton">Commencer</button>
   
   <script>
-    // --- Définition des constantes ---
-    const PIPE_WIDTH = 80;
-    const GAP_HEIGHT_MOBILE = 350;
-    const GAP_HEIGHT_DESKTOP = 250;
-    const PIPE_INTERVAL_MOBILE = 2000;  // Augmenté pour espacer davantage les paires sur mobile
-    const PIPE_INTERVAL_DESKTOP = 1500;
-    
+    /***** CONFIGURATION CENTRALISÉE *****/
+    const CONFIG = {
+      CANVAS_BG: "black",
+      FONT_FAMILY: "'Press Start 2P', cursive",
+      TEXT_COLOR: "#00FF00",
+      PIPE_WIDTH: 80,
+      GRAVITY: 0.5,
+      JUMP_STRENGTH: -10,
+      PIPE_SPEED: 2,
+      PIPE_INTERVAL: 1700, // espacement horizontal légèrement augmenté
+      GAP_HEIGHT_SMALL: 300,
+      GAP_HEIGHT_LARGE: 200,
+      TRANSITION_DURATION: 500,
+      GAMEOVER_FONT_SIZE: 60,
+      SCORE_FONT_SIZE: 40
+    };
+
+    /***** RÉCUPÉRATION DES ÉLÉMENTS DU DOM *****/
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    // Définir le gapHeight et pipeInterval en fonction de la taille d'écran
-    let gapHeight = window.innerWidth < 768 ? GAP_HEIGHT_MOBILE : GAP_HEIGHT_DESKTOP;
-    let pipeInterval = window.innerWidth < 768 ? PIPE_INTERVAL_MOBILE : PIPE_INTERVAL_DESKTOP;
-    
-    // Musique de fond
+    const startButton = document.getElementById("startButton");
+    const gameOverContainer = document.getElementById("gameOverContainer");
+    const restartButton = document.getElementById("restartButton");
+    const homeLink = document.getElementById("homeLink");
+
+    /***** DIMENSIONNEMENT DU CANVAS *****/
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gapHeight = window.innerWidth < 768 ? CONFIG.GAP_HEIGHT_SMALL : CONFIG.GAP_HEIGHT_LARGE;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    /***** MUSIQUE DE FOND *****/
     const bgMusic = new Audio("assets/flappy.mp3");
     bgMusic.loop = true;
     bgMusic.volume = 0.5;
     
-    // États du jeu
+    /***** ÉTATS DU JEU *****/
     const STATE = {
       START: 'start',
       TRANSITION: 'transition',
@@ -123,97 +151,150 @@
     };
     let gameState = STATE.START;
     
-    // Variables pour la gestion du jeu
+    /***** GESTION DES ÉVÉNEMENTS *****/
+    // Suivi de la souris (pour d'éventuelles interactions)
     let mouseX = 0, mouseY = 0;
-    let score = 0;
-    let lastPipeTime = 0;
-    let autoJumpCount = 0;
-    let autoJumpTimer = 0;
-    let transitionTimer = 0;
-    
-    // Déclaration unique du tableau de tuyaux
-    let pipes = [];
-    
-    // --- Événements ---
-    canvas.addEventListener("mousemove", (e) => {
+    canvas.addEventListener("mousemove", e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     });
     
-    // Écouteur tactile pour mobile
-    canvas.addEventListener("touchstart", (e) => {
+    // Amélioration du tactile sur mobile
+    canvas.addEventListener("touchstart", e => {
       e.preventDefault();
-      if (gameState === STATE.START) {
-        bgMusic.play();
-        startTransition();
-      } else if (gameState === STATE.PLAYING) {
-        bird.velocity = bird.jumpStrength;
+      if (gameState === STATE.PLAYING) {
+        bird.velocity = CONFIG.JUMP_STRENGTH;
       }
     });
     
-    // Clic sur le canvas (pour desktop)
-    canvas.addEventListener("click", () => {
-      if (gameState === STATE.START) {
-        bgMusic.play();
-        startTransition();
-      } else if (gameState === STATE.PLAYING) {
-        bird.velocity = bird.jumpStrength;
+    // Gestion du clavier pour le saut
+    document.addEventListener("keydown", e => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (gameState === STATE.PLAYING) {
+          bird.velocity = CONFIG.JUMP_STRENGTH;
+        }
       }
+    });
+    
+    // Clic sur le canvas pour sauter
+    canvas.addEventListener("click", () => {
+      if (gameState === STATE.PLAYING) {
+        bird.velocity = CONFIG.JUMP_STRENGTH;
+      }
+    });
+    
+    // Bouton "Commencer"
+    startButton.style.display = "block";
+    startButton.addEventListener("click", () => {
+      bgMusic.play();
+      startButton.style.display = "none";
+      startTransition();
     });
     
     // Bouton "Recommencer"
-    const restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", () => {
       restartGame();
     });
     
-    // Bouton "Retour à l'accueil" : arrêter la musique
-    const homeLink = document.getElementById("homeLink");
+    // Bouton "Retour à l'accueil" : arrêt de la musique
     homeLink.addEventListener("click", () => {
       bgMusic.pause();
     });
     
-    // --- Propriétés du "bird" ---
+    /***** INITIALISATION DU JEU *****/
+    // Propriétés du "bird"
     const bird = {
       x: canvas.width / 4,
       y: canvas.height / 2,
       width: 50,
       height: 50,
       velocity: 0,
-      gravity: 0.5,
-      jumpStrength: -10
+      gravity: CONFIG.GRAVITY,
+      jumpStrength: CONFIG.JUMP_STRENGTH
     };
     
-    // Chargement de l'image "donald"
-    const donaldImg = new Image();
-    donaldImg.src = "assets/donald.jpg";
+    // Gap entre tuyaux
+    let gapHeight = window.innerWidth < 768 ? CONFIG.GAP_HEIGHT_SMALL : CONFIG.GAP_HEIGHT_LARGE;
+    const pipeWidth = CONFIG.PIPE_WIDTH;
+    let pipeInterval = CONFIG.PIPE_INTERVAL;
+    let lastPipeTime = 0;
     
-    // --- Fonctions de jeu ---
+    // Score
+    let score = 0;
     
+    // Variables pour l'auto-jump
+    let autoJumpCount = 0;
+    let autoJumpTimer = 0;
+    
+    // Timer de transition
+    let transitionTimer = 0;
+    
+    // Liste des tuyaux
+    let pipes = [];
+    
+    // Fonction pour générer un tuyau
     function spawnPipe() {
-      // Calculer une position de gap aléatoire
       const gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
       const topHeight = gapPosition;
       const bottomHeight = canvas.height - gapPosition - gapHeight;
       pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
     }
     
-    function checkCollision(b, p) {
-      const { x: bx, y: by, width: bw, height: bh } = b;
-      const { x: px, top: pt, bottom: pb } = p;
-      // Collision avec le tuyau supérieur
-      if (bx < px + PIPE_WIDTH && bx + bw > px && by < pt) return true;
-      // Collision avec le tuyau inférieur
-      if (bx < px + PIPE_WIDTH && bx + bw > px && by + bh > canvas.height - pb) return true;
-      return false;
+    // Démarrer la transition
+    function startTransition() {
+      gameState = STATE.TRANSITION;
+      transitionTimer = 0;
     }
     
-    function updateGame(deltaTime) {
+    // Redémarrer le jeu
+    function restartGame() {
+      gameState = STATE.START;
+      bird.y = canvas.height / 2;
+      bird.velocity = 0;
+      pipes = [];
+      score = 0;
+      autoJumpCount = 0;
+      autoJumpTimer = 0;
+      lastPipeTime = 0;
+      gameOverContainer.style.display = "none";
+      startButton.style.display = "block";
+    }
+    
+    // Mise à jour de l'affichage des boutons en fonction de l'état
+    function updateButtons() {
       if (gameState === STATE.START) {
-        // Rien à mettre à jour pour l'instant
+        gameOverContainer.style.display = "none";
+        startButton.style.display = "block";
+      } else if (gameState === STATE.GAMEOVER) {
+        gameOverContainer.style.display = "flex";
+        startButton.style.display = "none";
+      } else {
+        gameOverContainer.style.display = "none";
+        startButton.style.display = "none";
+      }
+    }
+    
+    /***** BOUCLE DE JEU *****/
+    let lastTime = 0;
+    function gameLoop(timestamp) {
+      const deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
+      
+      // Effacer le canvas
+      ctx.fillStyle = CONFIG.CANVAS_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      updateButtons();
+      
+      if (gameState === STATE.START) {
+        // Le bouton "Commencer" est géré par l'élément HTML.
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
-        if (transitionTimer >= 500) {
+        const alpha = Math.min(1, transitionTimer / CONFIG.TRANSITION_DURATION);
+        ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (transitionTimer >= CONFIG.TRANSITION_DURATION) {
           gameState = STATE.AUTO_JUMP;
           autoJumpTimer = 0;
         }
@@ -230,116 +311,86 @@
         }
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
+        ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
+        ctx.fillStyle = CONFIG.TEXT_COLOR;
+        ctx.font = "20px " + CONFIG.FONT_FAMILY;
+        ctx.textAlign = "left";
+        ctx.fillText(score, 20, 40);
       } else if (gameState === STATE.PLAYING) {
+        if (pipes.length === 0) {
+          spawnPipe();
+          lastPipeTime = timestamp;
+        }
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
-        // Générer un tuyau si nécessaire
-        if (pipes.length === 0 || (performance.now() - lastPipeTime > pipeInterval)) {
+        
+        if (timestamp - lastPipeTime > pipeInterval) {
           spawnPipe();
-          lastPipeTime = performance.now();
+          lastPipeTime = timestamp;
         }
-        // Mettre à jour les tuyaux
-        pipes.forEach(p => {
-          p.x -= 2;
-          if (!p.passed && p.x + PIPE_WIDTH < bird.x) {
-            score += 50;
-            p.passed = true;
-          }
-          if (checkCollision(bird, p)) {
+        
+        pipes.forEach(pipe => {
+          pipe.x -= CONFIG.PIPE_SPEED;
+          if (checkCollision(bird, pipe)) {
             gameState = STATE.GAMEOVER;
           }
-        });
-        // Supprimer les tuyaux hors écran
-        pipes = pipes.filter(p => p.x + PIPE_WIDTH > 0);
-      }
-    }
-    
-    function drawGame() {
-      // Effacer le canvas
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      if (gameState === STATE.START) {
-        // Affichage du bouton "Commencer" sur le canvas
-        let startText = document.getElementById("startText").textContent || "Commencer";
-        ctx.font = "40px 'Press Start 2P'";
-        let metrics = ctx.measureText(startText);
-        let textWidth = metrics.width;
-        let paddingX = 20, paddingY = 10;
-        let rectWidth = textWidth + 2 * paddingX;
-        let rectHeight = 40 + 2 * paddingY;
-        let rectX = canvas.width / 2 - rectWidth / 2;
-        let rectY = canvas.height / 2 - rectHeight / 2;
-        // Dessiner le bouton
-        ctx.strokeStyle = "#00FF00";
-        ctx.lineWidth = 3;
-        ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-        ctx.fillStyle = "#00FF00";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(startText, canvas.width / 2, canvas.height / 2);
-      } else if (gameState === STATE.TRANSITION) {
-        let alpha = Math.min(1, transitionTimer / 500);
-        ctx.fillStyle = "rgba(0, 0, 0," + alpha + ")";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      } else if (gameState === STATE.AUTO_JUMP) {
-        // Dessiner l'oiseau pendant l'auto-jump
-        ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
-        ctx.fillStyle = "#00FF00";
-        ctx.font = "20px 'Press Start 2P'";
-        ctx.textAlign = "left";
-        ctx.fillText(score, 20, 40);
-      } else if (gameState === STATE.PLAYING) {
-        // Dessiner les tuyaux
-        pipes.forEach(p => {
-          // Tuyau supérieur
+          if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
+            score += 50;
+            pipe.passed = true;
+          }
+          // Dessiner le tuyau supérieur
           ctx.fillStyle = "green";
-          ctx.fillRect(p.x, 0, PIPE_WIDTH, p.top);
+          ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
-          ctx.strokeRect(p.x, 0, PIPE_WIDTH, p.top);
-          // Tuyau inférieur
+          ctx.strokeRect(pipe.x, 0, pipeWidth, pipe.top);
+          // Dessiner le tuyau inférieur
           ctx.fillStyle = "green";
-          ctx.fillRect(p.x, canvas.height - p.bottom, PIPE_WIDTH, p.bottom);
+          ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
           ctx.strokeStyle = "#003300";
           ctx.lineWidth = 4;
-          ctx.strokeRect(p.x, canvas.height - p.bottom, PIPE_WIDTH, p.bottom);
+          ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
-        // Dessiner l'oiseau
+        pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
+        
         ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
-        // Afficher le score
-        ctx.fillStyle = "#00FF00";
-        ctx.font = "20px 'Press Start 2P'";
+        ctx.fillStyle = CONFIG.TEXT_COLOR;
+        ctx.font = "20px " + CONFIG.FONT_FAMILY;
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
+        
+        if (bird.y + bird.height > canvas.height) {
+          gameState = STATE.GAMEOVER;
+        }
       } else if (gameState === STATE.GAMEOVER) {
-        ctx.fillStyle = "#00FF00";
-        ctx.font = "60px 'Press Start 2P'";
+        // Affichage du message de défaite et du score, centrés en haut de la zone des boutons
+        ctx.fillStyle = CONFIG.TEXT_COLOR;
         ctx.textAlign = "center";
-        ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
-        ctx.font = "40px 'Press Start 2P'";
-        ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 60);
+        ctx.font = CONFIG.GAMEOVER_FONT_SIZE + "px " + CONFIG.FONT_FAMILY;
+        const gameOverTextY = canvas.height * 0.4;
+        ctx.fillText("T'AS PERDU", canvas.width / 2, gameOverTextY);
+        ctx.font = CONFIG.SCORE_FONT_SIZE + "px " + CONFIG.FONT_FAMILY;
+        const scoreTextY = canvas.height * 0.5;
+        ctx.fillText("Score : " + score, canvas.width / 2, scoreTextY);
       }
-    }
-    
-    let previousTimestamp = 0;
-    function gameLoop(timestamp) {
-      const deltaTime = timestamp - previousTimestamp;
-      previousTimestamp = timestamp;
-      
-      updateGame(deltaTime);
-      drawGame();
       
       requestAnimationFrame(gameLoop);
     }
     requestAnimationFrame(gameLoop);
     
-    window.addEventListener('resize', function() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gapHeight = window.innerWidth < 768 ? 350 : 250;
-      pipeInterval = window.innerWidth < 768 ? PIPE_INTERVAL_MOBILE : PIPE_INTERVAL_DESKTOP;
-    });
+    /***** VÉRIFICATION DE COLLISION *****/
+    function checkCollision(bird, pipe) {
+      const tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
+      const bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
+      const bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
+      if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
+      if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
+      return false;
+    }
+    
+    /***** CHARGEMENT DE L'IMAGE *****/
+    const donaldImg = new Image();
+    donaldImg.src = "assets/donald.jpg";
   </script>
 </body>
 </html>
