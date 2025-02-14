@@ -131,6 +131,14 @@
     // Chargement de l'image "donald"
     const donaldImg = new Image();
     donaldImg.src = "assets/donald.jpg";
+
+    // Chargement de l'image de fond
+    const backgroundImg = new Image();
+    backgroundImg.src = "assets/flappyfond.jpg";
+
+    // Chargement de l'image du tuyau
+    const pipeImg = new Image();
+    pipeImg.src = "assets/pype.png";
     
     // Propriétés du "bird"
     const bird = {
@@ -233,9 +241,13 @@
       let deltaTime = timestamp - lastTime;
       lastTime = timestamp;
       
-      // Effacer le canvas
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Effacer le canvas et dessiner le fond en fonction de l'état du jeu
+      if (gameState === STATE.START) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+      }
       
       // Affichage conditionnel des boutons en fonction de l'état du jeu
       if (gameState === STATE.START) {
@@ -303,18 +315,16 @@
             score += 50;
             pipe.passed = true;
           }
-          // Dessiner le tuyau supérieur
-          ctx.fillStyle = "green";
-          ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
-          ctx.strokeStyle = "#003300";
-          ctx.lineWidth = 4;
-          ctx.strokeRect(pipe.x, 0, pipeWidth, pipe.top);
-          // Dessiner le tuyau inférieur
-          ctx.fillStyle = "green";
-          ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
-          ctx.strokeStyle = "#003300";
-          ctx.lineWidth = 4;
-          ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
+          
+          // Dessiner le tuyau supérieur (image inversée)
+          ctx.save();
+          ctx.translate(pipe.x, pipe.top);
+          ctx.scale(1, -1);
+          ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipe.top);
+          ctx.restore();
+
+          // Dessiner le tuyau inférieur (image normale)
+          ctx.drawImage(pipeImg, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
         pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
         
