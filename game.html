@@ -151,8 +151,8 @@
     };
     
     // Ajustement du gap selon la taille de l'écran :
-    // - Sur petit écran, réduire la distance verticale (gapHeight) et augmenter l'espacement horizontal (pipeInterval)
-    let gapHeight = window.innerWidth < 768 ? 150 : 200;
+    // - Sur petit écran, gapHeight est passé à 220 au lieu de 150.
+    let gapHeight = window.innerWidth < 768 ? 220 : 200;
     const pipeWidth = 80;
     let pipeInterval = window.innerWidth < 768 ? 2000 : 1800;
     let lastPipeTime = 0;
@@ -257,7 +257,12 @@
       
       // Affichage conditionnel des boutons en fonction de l'état du jeu
       if (gameState === STATE.START) {
-        homeLink.style.display = "block";
+        // Pour petit écran, afficher le bouton "Retour à l'accueil" en inline-block
+        if (canvas.width < 768) {
+          homeLink.style.display = "inline-block";
+        } else {
+          homeLink.style.display = "block";
+        }
         restartButton.style.display = "none";
         startButton.style.display = "block";
       } else if (gameState === STATE.GAMEOVER) {
@@ -266,13 +271,19 @@
           homeLink.style.top = "20px";
           homeLink.style.left = "20px";
           homeLink.style.bottom = "";
+          homeLink.style.width = "auto"; // largeur automatique
           restartButton.style.bottom = "20px";
           restartButton.style.right = "20px";
         } else {
           homeLink.style.bottom = "20px";
           homeLink.style.top = "";
         }
-        homeLink.style.display = "block";
+        // Sur petit écran, on utilise inline-block pour le bouton "Retour à l'accueil"
+        if (canvas.width < 768) {
+          homeLink.style.display = "inline-block";
+        } else {
+          homeLink.style.display = "block";
+        }
         restartButton.style.display = "block";
         startButton.style.display = "none";
       } else {
@@ -380,7 +391,7 @@
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      gapHeight = window.innerWidth < 768 ? 150 : 200;
+      gapHeight = window.innerWidth < 768 ? 220 : 200;
       pipeInterval = window.innerWidth < 768 ? 2000 : 1800;
     });
     
