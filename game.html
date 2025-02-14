@@ -155,7 +155,8 @@
     // Sur petit écran, le gap est augmenté (300) pour faciliter le passage
     let gapHeight = window.innerWidth < 768 ? 300 : 200;
     const pipeWidth = 80;
-    let pipeInterval = 1500;
+    // Sur téléphone, les tuyaux sont rapprochés horizontalement, sur grand écran plus espacés
+    let pipeInterval = window.innerWidth < 768 ? 1200 : 1800;
     let lastPipeTime = 0;
     
     // Score
@@ -241,8 +242,10 @@
       let deltaTime = timestamp - lastTime;
       lastTime = timestamp;
       
-      // Effacer le canvas et dessiner le fond en fonction de l'état du jeu
-      if (gameState === STATE.START) {
+      // Afficher le fond :
+      // - En mode START ou GAMEOVER, on affiche un fond noir.
+      // - Sinon, on affiche l'image de fond.
+      if (gameState === STATE.START || gameState === STATE.GAMEOVER) {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       } else {
@@ -338,12 +341,22 @@
           gameState = STATE.GAMEOVER;
         }
       } else if (gameState === STATE.GAMEOVER) {
-        ctx.fillStyle = "#00FF00";
-        ctx.font = "60px 'Press Start 2P'";
-        ctx.textAlign = "center";
-        ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
-        ctx.font = "40px 'Press Start 2P'";
-        ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 60);
+        // Sur petit écran, on réduit la taille des écritures pour éviter le chevauchement.
+        if (canvas.width < 768) {
+          ctx.fillStyle = "#00FF00";
+          ctx.font = "40px 'Press Start 2P'";
+          ctx.textAlign = "center";
+          ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
+          ctx.font = "30px 'Press Start 2P'";
+          ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 40);
+        } else {
+          ctx.fillStyle = "#00FF00";
+          ctx.font = "60px 'Press Start 2P'";
+          ctx.textAlign = "center";
+          ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
+          ctx.font = "40px 'Press Start 2P'";
+          ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 60);
+        }
       }
       
       requestAnimationFrame(gameLoop);
@@ -354,6 +367,7 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       gapHeight = window.innerWidth < 768 ? 300 : 200;
+      pipeInterval = window.innerWidth < 768 ? 1200 : 1800;
     });
     
     // Vérification de collision
