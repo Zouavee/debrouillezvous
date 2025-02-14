@@ -38,13 +38,12 @@
       color: black;
     }
     /* Positionnement des boutons */
-    /* Retour à l'accueil en bas à gauche */
+    /* Par défaut, Retour à l'accueil en bas à gauche et Recommencer en bas à droite */
     #homeLink {
       bottom: 20px;
       left: 20px;
       display: none;
     }
-    /* Recommencer en bas à droite */
     #restartButton {
       bottom: 20px;
       right: 20px;
@@ -151,12 +150,11 @@
       jumpStrength: -10
     };
     
-    // Ajustement du gap selon la taille de l'écran
-    // Sur petit écran, le gap est augmenté (300) pour faciliter le passage
-    let gapHeight = window.innerWidth < 768 ? 300 : 200;
+    // Ajustement du gap selon la taille de l'écran :
+    // - Sur petit écran, réduire la distance verticale (gapHeight) et augmenter l'espacement horizontal (pipeInterval)
+    let gapHeight = window.innerWidth < 768 ? 150 : 200;
     const pipeWidth = 80;
-    // Sur téléphone, les tuyaux sont rapprochés horizontalement, sur grand écran plus espacés
-    let pipeInterval = window.innerWidth < 768 ? 1200 : 1800;
+    let pipeInterval = window.innerWidth < 768 ? 2000 : 1800;
     let lastPipeTime = 0;
     
     // Score
@@ -232,9 +230,14 @@
       autoJumpCount = 0;
       autoJumpTimer = 0;
       lastPipeTime = 0;
-      restartButton.style.display = "none";
+      // Réinitialisation des positions par défaut
+      homeLink.style.top = "";
+      homeLink.style.bottom = "20px";
+      restartButton.style.top = "";
+      restartButton.style.bottom = "20px";
       homeLink.style.display = "block";
       startButton.style.display = "block";
+      restartButton.style.display = "none";
     }
     
     let lastTime = 0;
@@ -258,6 +261,17 @@
         restartButton.style.display = "none";
         startButton.style.display = "block";
       } else if (gameState === STATE.GAMEOVER) {
+        // Pour les petits écrans, repositionner les boutons pour éviter le chevauchement
+        if (canvas.width < 768) {
+          homeLink.style.top = "20px";
+          homeLink.style.left = "20px";
+          homeLink.style.bottom = "";
+          restartButton.style.bottom = "20px";
+          restartButton.style.right = "20px";
+        } else {
+          homeLink.style.bottom = "20px";
+          homeLink.style.top = "";
+        }
         homeLink.style.display = "block";
         restartButton.style.display = "block";
         startButton.style.display = "none";
@@ -341,7 +355,7 @@
           gameState = STATE.GAMEOVER;
         }
       } else if (gameState === STATE.GAMEOVER) {
-        // Sur petit écran, on réduit la taille des écritures pour éviter le chevauchement.
+        // Affichage du message de défaite
         if (canvas.width < 768) {
           ctx.fillStyle = "#00FF00";
           ctx.font = "40px 'Press Start 2P'";
@@ -366,8 +380,8 @@
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      gapHeight = window.innerWidth < 768 ? 300 : 200;
-      pipeInterval = window.innerWidth < 768 ? 1200 : 1800;
+      gapHeight = window.innerWidth < 768 ? 150 : 200;
+      pipeInterval = window.innerWidth < 768 ? 2000 : 1800;
     });
     
     // Vérification de collision
