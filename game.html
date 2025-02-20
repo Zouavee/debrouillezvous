@@ -21,50 +21,81 @@
       display: block;
     }
     /* Boutons interactifs */
-    #homeLink, #restartButton, #startButton {
+    #homeLink, #restartButton {
       font-family: 'Press Start 2P', cursive;
       color: #00FF00;
       text-decoration: none;
       background: transparent;
       border: 2px solid #00FF00;
-      padding: 5px; /* Boutons rapetissés */
+      padding: 5px;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
       z-index: 10;
       position: absolute;
     }
-    #homeLink:hover, #restartButton:hover, #startButton:hover {
+    #homeLink:hover, #restartButton:hover {
       background: #00FF00;
       color: black;
     }
-    /* Positionnement des boutons */
-    /* Par défaut, Retour à l'accueil en bas à gauche et Recommencer en bas à droite */
+    /* Interface de sélection de tête */
+    #headSelectionContainer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    /* Flèches rétro/gaming */
+    #headSelector button {
+      font-size: 3rem;
+      background: transparent;
+      border: 2px solid #00FF00;
+      color: #00FF00;
+      padding: 10px 15px;
+      margin: 0 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    #headSelector button:hover {
+      background: #00FF00;
+      color: black;
+    }
+    #headSelector img {
+      vertical-align: middle;
+      width: 100px;
+      height: 100px;
+    }
+    /* Bouton "Commencer" stylisé en rétro */
+    #headSelectionContainer #startButton {
+      font-family: 'Press Start 2P', cursive;
+      color: #00FF00;
+      background: transparent;
+      border: 2px solid #00FF00;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      margin-top: 20px;
+    }
+    #headSelectionContainer #startButton:hover {
+      background: #00FF00;
+      color: black;
+    }
+    /* Positionnement du bouton Retour en bas à gauche */
     #homeLink {
       bottom: 20px;
       left: 20px;
       display: none;
     }
-    #restartButton {
-      bottom: 20px;
-      right: 20px;
-      display: none;
-    }
-    /* Bouton "Commencer" centré sur l'écran */
-    #startButton {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: none;
-    }
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      #homeLink, #restartButton, #startButton {
+      #homeLink, #restartButton, #headSelectionContainer {
         font-size: 0.9rem;
         padding: 4px;
       }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
-      #homeLink, #restartButton, #startButton {
+      #homeLink, #restartButton, #headSelectionContainer {
         font-size: 1rem;
       }
     }
@@ -73,7 +104,6 @@
 <body>
   <!-- Élément caché pour la configuration éditable du jeu -->
   <div id="gameConfig" style="display: none;" data-sb-field="gameConfig">
-    <!-- Texte éditable pour le bouton de démarrage (affiché auparavant dans le canvas) -->
     <span id="startText" data-sb-field="gameStartText">Commencer</span>
   </div>
 
@@ -82,10 +112,18 @@
 
   <!-- Bouton "Retour à l'accueil" éditable -->
   <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour</a>
-  <!-- Bouton "Recommencer" éditable -->
+  <!-- Bouton "Recommencer" éditable (affiché en cas de défaite) -->
   <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
-  <!-- Nouveau bouton "Commencer" en dehors du canvas -->
-  <button id="startButton">Commencer</button>
+  
+  <!-- Interface de sélection de tête -->
+  <div id="headSelectionContainer">
+    <div id="headSelector">
+      <button id="leftArrow">&#8592;</button>
+      <img id="headImage" src="assets/donald.jpg" alt="Tête de Donald">
+      <button id="rightArrow">&#8594;</button>
+    </div>
+    <button id="startButton">Commencer</button>
+  </div>
   
   <script>
     const canvas = document.getElementById("gameCanvas");
@@ -122,12 +160,10 @@
         bird.velocity = bird.jumpStrength;
       } else if (gameState === STATE.START) {
         bgMusic.play();
-        startButton.style.display = "none";
-        startTransition();
       }
     });
     
-    // Chargement de l'image "donald"
+    // Chargement de l'image "donald" (sera mise à jour lors de la sélection)
     const donaldImg = new Image();
     donaldImg.src = "assets/donald.jpg";
 
@@ -153,11 +189,8 @@
       jumpStrength: -10
     };
     
-    // Ajustement du gap selon la taille de l'écran :
-    // Sur petit écran, le gap vertical est fixé à 200, sinon 200 également.
     let gapHeight = window.innerWidth < 768 ? 200 : 200;
     const pipeWidth = 80;
-    // Sur petit écran, l'intervalle horizontal est passé à 1900, sinon 1800.
     let pipeInterval = window.innerWidth < 768 ? 1900 : 1800;
     let lastPipeTime = 0;
     
@@ -171,7 +204,6 @@
     // Timer de transition
     let transitionTimer = 0;
     
-    // Fonction pour générer un tuyau
     function spawnPipe() {
       let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
       let topHeight = gapPosition;
@@ -179,10 +211,8 @@
       pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
     }
     
-    // Tuyaux
     let pipes = [];
     
-    // Gestion du clavier
     document.addEventListener("keydown", function(e) {
       if (e.code === "Space") {
         e.preventDefault();
@@ -192,29 +222,44 @@
       }
     });
     
-    // Clic sur le canvas pour sauter pendant la partie
     canvas.addEventListener("click", function() {
       if (gameState === STATE.PLAYING) {
         bird.velocity = bird.jumpStrength;
       }
     });
     
-    // Bouton "Commencer" (nouveau bouton HTML)
+    // Interface de sélection de tête
+    const headSelectionContainer = document.getElementById("headSelectionContainer");
+    const leftArrow = document.getElementById("leftArrow");
+    const rightArrow = document.getElementById("rightArrow");
+    const headImage = document.getElementById("headImage");
     const startButton = document.getElementById("startButton");
-    startButton.style.display = "block";
+    const headImages = ["assets/donald.jpg", "assets/donald2.jpg"];
+    let selectedHeadIndex = 0;
+    
+    leftArrow.addEventListener("click", function() {
+      selectedHeadIndex = (selectedHeadIndex - 1 + headImages.length) % headImages.length;
+      headImage.src = headImages[selectedHeadIndex];
+    });
+    rightArrow.addEventListener("click", function() {
+      selectedHeadIndex = (selectedHeadIndex + 1) % headImages.length;
+      headImage.src = headImages[selectedHeadIndex];
+    });
     startButton.addEventListener("click", function() {
       bgMusic.play();
-      startButton.style.display = "none";
+      // Met à jour l'image utilisée pour l'oiseau selon la sélection
+      donaldImg.src = headImages[selectedHeadIndex];
+      headSelectionContainer.style.display = "none";
       startTransition();
     });
     
-    // Bouton "Recommencer"
+    // Bouton "Recommencer" affiché en cas de défaite
     const restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", function() {
       restartGame();
     });
     
-    // Bouton "Retour à l'accueil" : arrêt de la musique lors du clic
+    // Bouton "Retour" reste inchangé (positionné en bas à gauche)
     const homeLink = document.getElementById("homeLink");
     homeLink.addEventListener("click", function() {
       bgMusic.pause();
@@ -225,6 +270,7 @@
       transitionTimer = 0;
     }
     
+    // Redémarre le jeu en réaffichant l'interface de sélection de tête
     function restartGame() {
       gameState = STATE.START;
       bird.y = canvas.height / 2;
@@ -234,13 +280,13 @@
       autoJumpCount = 0;
       autoJumpTimer = 0;
       lastPipeTime = 0;
-      // Réinitialisation des positions par défaut
       homeLink.style.top = "";
       homeLink.style.bottom = "20px";
       restartButton.style.top = "";
       restartButton.style.bottom = "20px";
+      // Affiche le bouton Retour et l'interface de sélection
       homeLink.style.display = "block";
-      startButton.style.display = "block";
+      headSelectionContainer.style.display = "block";
       restartButton.style.display = "none";
     }
     
@@ -249,9 +295,6 @@
       let deltaTime = timestamp - lastTime;
       lastTime = timestamp;
       
-      // Afficher le fond :
-      // - En mode START ou GAMEOVER, on affiche un fond noir.
-      // - Sinon, on affiche l'image de fond.
       if (gameState === STATE.START || gameState === STATE.GAMEOVER) {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -259,23 +302,20 @@
         ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
       }
       
-      // Affichage conditionnel des boutons en fonction de l'état du jeu
       if (gameState === STATE.START) {
         homeLink.style.display = "block";
         restartButton.style.display = "none";
-        startButton.style.display = "block";
+        // L'interface de sélection est gérée par le HTML
       } else if (gameState === STATE.GAMEOVER) {
         homeLink.style.display = "block";
         restartButton.style.display = "block";
-        startButton.style.display = "none";
       } else {
         homeLink.style.display = "none";
         restartButton.style.display = "none";
-        startButton.style.display = "none";
       }
       
       if (gameState === STATE.START) {
-        // Le bouton "Commencer" est géré par l'élément HTML.
+        // L'interface de sélection reste affichée
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
         let alpha = Math.min(1, transitionTimer / 500);
@@ -326,14 +366,12 @@
             pipe.passed = true;
           }
           
-          // Dessiner le tuyau supérieur (image inversée)
           ctx.save();
           ctx.translate(pipe.x, pipe.top);
           ctx.scale(1, -1);
           ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipe.top);
           ctx.restore();
 
-          // Dessiner le tuyau inférieur (image normale)
           ctx.drawImage(pipeImg, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
         pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
@@ -348,7 +386,6 @@
           gameState = STATE.GAMEOVER;
         }
       } else if (gameState === STATE.GAMEOVER) {
-        // Affichage du message de défaite
         if (canvas.width < 768) {
           ctx.fillStyle = "#00FF00";
           ctx.font = "40px 'Press Start 2P'";
@@ -377,7 +414,6 @@
       pipeInterval = window.innerWidth < 768 ? 1900 : 1800;
     });
     
-    // Vérification de collision
     function checkCollision(bird, pipe) {
       let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
       let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
