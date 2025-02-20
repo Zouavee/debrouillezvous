@@ -142,7 +142,7 @@
   <!-- Le canvas pour le jeu -->
   <canvas id="gameCanvas"></canvas>
 
-  <!-- Bouton "Retour à l'accueil" (redirige vers index.html) visible sur l'écran de sélection -->
+  <!-- Bouton "Retour à l'accueil" qui arrête la musique et renvoie vers index.html -->
   <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
   
   <!-- Bouton "Retour au menu" affiché en GAMEOVER -->
@@ -293,12 +293,20 @@
       restartGame();
     });
     
+    // Ajout d'un écouteur sur "Retour à l'accueil" pour arrêter la musique
+    homeLink.addEventListener("click", function(e) {
+      e.preventDefault();
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+      window.location.href = this.href;
+    });
+    
     function startTransition() {
       gameState = STATE.TRANSITION;
       transitionTimer = 0;
     }
     
-    // Fonction de réinitialisation : réaffiche l'interface de sélection et le bouton "Retour à l'accueil"
+    // Réinitialisation : réaffiche l'écran de sélection et le bouton "Retour à l'accueil"
     function restartGame() {
       gameState = STATE.START;
       bird.y = canvas.height / 2;
@@ -332,13 +340,12 @@
         headSelectionContainer.style.display = "none";
         menuButton.style.display = "block";
       } else {
-        // Pendant le jeu, on cache ces boutons
         homeLink.style.display = "none";
         menuButton.style.display = "none";
       }
       
       if (gameState === STATE.START) {
-        // Interface de sélection gérée par le HTML
+        // L'interface de sélection est gérée par le HTML.
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
         let alpha = Math.min(1, transitionTimer / 500);
