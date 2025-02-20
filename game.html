@@ -241,15 +241,10 @@
       restartButton.style.display = "none";
     }
     
-    // Limitation de la fréquence d'exécution à environ 60 FPS
-    let lastFrameTime = 0;
+    let lastTime = 0;
     function gameLoop(timestamp) {
-      let deltaTime = timestamp - lastFrameTime;
-      if (deltaTime < 16) { // 16ms ≈ 60 FPS
-        requestAnimationFrame(gameLoop);
-        return;
-      }
-      lastFrameTime = timestamp;
+      let deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
       
       // Afficher le fond :
       // - En mode START ou GAMEOVER, on affiche un fond noir.
