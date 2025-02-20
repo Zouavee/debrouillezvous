@@ -46,20 +46,20 @@
       text-align: center;
       z-index: 10;
     }
-    /* Flèches rétro/gaming */
+    /* Flèches rétro sans gros cadre */
     #headSelector button {
       font-size: 3rem;
       background: transparent;
-      border: 2px solid #00FF00;
+      border: none;  /* plus de gros carré */
       color: #00FF00;
       padding: 10px 15px;
       margin: 0 10px;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: color 0.2s, text-shadow 0.2s;
     }
     #headSelector button:hover {
-      background: #00FF00;
       color: black;
+      text-shadow: 2px 2px 0 #00FF00;
     }
     #headSelector img {
       vertical-align: middle;
@@ -92,6 +92,16 @@
       #homeLink, #restartButton, #headSelectionContainer {
         font-size: 0.9rem;
         padding: 4px;
+      }
+      /* Adaptation des flèches sur petit écran */
+      #headSelector button {
+        font-size: 2rem;
+        padding: 5px 8px;
+        margin: 0 5px;
+      }
+      #headSelector img {
+        width: 80px;
+        height: 80px;
       }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
@@ -146,14 +156,14 @@
     };
     let gameState = STATE.START;
     
-    // Suivi de la souris (non utilisé pour le nouveau bouton HTML)
+    // Suivi de la souris
     let mouseX = 0, mouseY = 0;
     canvas.addEventListener("mousemove", function(e) {
       mouseX = e.clientX;
       mouseY = e.clientY;
     });
     
-    // Ajout d'un événement tactile pour améliorer la réactivité sur mobile
+    // Événement tactile pour mobile
     canvas.addEventListener("touchstart", function(e) {
       e.preventDefault();
       if (gameState === STATE.PLAYING) {
@@ -175,7 +185,7 @@
     const pipeImg = new Image();
     pipeImg.src = "assets/pype.png";
     
-    // Calculer la position de départ de l'oiseau en fonction de la largeur de l'écran
+    // Calcul de la position de départ de l'oiseau en fonction de la largeur de l'écran
     const birdStartX = window.innerWidth > 1024 ? canvas.width * 0.6 : canvas.width / 4;
     
     // Propriétés du "bird"
@@ -189,7 +199,7 @@
       jumpStrength: -10
     };
     
-    let gapHeight = window.innerWidth < 768 ? 200 : 200;
+    let gapHeight = 200;
     const pipeWidth = 80;
     let pipeInterval = window.innerWidth < 768 ? 1900 : 1800;
     let lastPipeTime = 0;
@@ -259,7 +269,7 @@
       restartGame();
     });
     
-    // Bouton "Retour" reste inchangé (positionné en bas à gauche)
+    // Bouton "Retour" (en bas à gauche)
     const homeLink = document.getElementById("homeLink");
     homeLink.addEventListener("click", function() {
       bgMusic.pause();
@@ -270,7 +280,7 @@
       transitionTimer = 0;
     }
     
-    // Redémarre le jeu en réaffichant l'interface de sélection de tête
+    // Redémarrage du jeu : affiche le menu de sélection (choix des têtes)
     function restartGame() {
       gameState = STATE.START;
       bird.y = canvas.height / 2;
@@ -284,7 +294,7 @@
       homeLink.style.bottom = "20px";
       restartButton.style.top = "";
       restartButton.style.bottom = "20px";
-      // Affiche le bouton Retour et l'interface de sélection
+      // Affiche "Retour" et le menu de sélection
       homeLink.style.display = "block";
       headSelectionContainer.style.display = "block";
       restartButton.style.display = "none";
@@ -305,7 +315,7 @@
       if (gameState === STATE.START) {
         homeLink.style.display = "block";
         restartButton.style.display = "none";
-        // L'interface de sélection est gérée par le HTML
+        // L'interface de sélection reste affichée
       } else if (gameState === STATE.GAMEOVER) {
         homeLink.style.display = "block";
         restartButton.style.display = "block";
@@ -315,7 +325,7 @@
       }
       
       if (gameState === STATE.START) {
-        // L'interface de sélection reste affichée
+        // L'interface de sélection est gérée par le HTML.
       } else if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
         let alpha = Math.min(1, transitionTimer / 500);
@@ -371,7 +381,6 @@
           ctx.scale(1, -1);
           ctx.drawImage(pipeImg, 0, 0, pipeWidth, pipe.top);
           ctx.restore();
-
           ctx.drawImage(pipeImg, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
         pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
