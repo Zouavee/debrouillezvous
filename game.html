@@ -11,7 +11,6 @@
     html, body {
       margin: 0;
       padding: 0;
-      /* Fond noir uniquement */
       background-color: black;
       overflow: hidden;
       height: 100%;
@@ -20,8 +19,8 @@
     canvas {
       display: block;
     }
-    /* Boutons interactifs */
-    #homeLink, #restartButton {
+    /* Boutons interactifs généraux */
+    #homeLink, #menuButton {
       font-family: 'Press Start 2P', cursive;
       color: #00FF00;
       text-decoration: none;
@@ -33,7 +32,7 @@
       z-index: 10;
       position: absolute;
     }
-    #homeLink:hover, #restartButton:hover {
+    #homeLink:hover, #menuButton:hover {
       background: #00FF00;
       color: black;
     }
@@ -46,14 +45,21 @@
       text-align: center;
       z-index: 10;
     }
+    /* Conteneur flex pour les flèches et l'image */
+    #headSelector {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 300px;
+      margin: 0 auto;
+    }
     /* Flèches rétro sans gros cadre */
     #headSelector button {
       font-size: 3rem;
       background: transparent;
-      border: none;  /* plus de gros carré */
+      border: none;
       color: #00FF00;
-      padding: 10px 15px;
-      margin: 0 10px;
+      padding: 10px;
       cursor: pointer;
       transition: color 0.2s, text-shadow 0.2s;
     }
@@ -62,11 +68,10 @@
       text-shadow: 2px 2px 0 #00FF00;
     }
     #headSelector img {
-      vertical-align: middle;
       width: 100px;
       height: 100px;
     }
-    /* Bouton "Commencer" stylisé en rétro */
+    /* Bouton "Commencer" dans le menu de sélection */
     #headSelectionContainer #startButton {
       font-family: 'Press Start 2P', cursive;
       color: #00FF00;
@@ -81,23 +86,42 @@
       background: #00FF00;
       color: black;
     }
-    /* Positionnement du bouton Retour en bas à gauche */
-    #homeLink {
+    /* Bouton "Retour à l'accueil" dans le menu de sélection */
+    #headSelectionContainer #homeButton {
+      font-family: 'Press Start 2P', cursive;
+      color: #00FF00;
+      background: transparent;
+      border: 2px solid #00FF00;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      margin-top: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #headSelectionContainer #homeButton:hover {
+      background: #00FF00;
+      color: black;
+    }
+    /* Positionnement du bouton "Retour au menu" en bas à gauche */
+    #menuButton {
       bottom: 20px;
       left: 20px;
       display: none;
     }
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      #homeLink, #restartButton, #headSelectionContainer {
+      #homeLink, #menuButton, #headSelectionContainer {
         font-size: 0.9rem;
         padding: 4px;
       }
-      /* Adaptation des flèches sur petit écran */
+      #headSelector {
+        width: 250px;
+      }
       #headSelector button {
         font-size: 2rem;
-        padding: 5px 8px;
-        margin: 0 5px;
+        padding: 5px;
       }
       #headSelector img {
         width: 80px;
@@ -105,7 +129,7 @@
       }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
-      #homeLink, #restartButton, #headSelectionContainer {
+      #homeLink, #menuButton, #headSelectionContainer {
         font-size: 1rem;
       }
     }
@@ -120,10 +144,8 @@
   <!-- Le canvas pour le jeu -->
   <canvas id="gameCanvas"></canvas>
 
-  <!-- Bouton "Retour à l'accueil" éditable -->
-  <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour</a>
-  <!-- Bouton "Recommencer" éditable (affiché en cas de défaite) -->
-  <button id="restartButton" data-sb-field="gameRestartButtonText">Recommencer</button>
+  <!-- Bouton "Retour au menu" (sera utilisé en GAMEOVER) -->
+  <button id="menuButton" data-sb-field="gameRestartButtonText">Retour au menu</button>
   
   <!-- Interface de sélection de tête -->
   <div id="headSelectionContainer">
@@ -133,6 +155,8 @@
       <button id="rightArrow">&#8594;</button>
     </div>
     <button id="startButton">Commencer</button>
+    <!-- Bouton pour retourner à l'accueil (vers index.html) dans le menu de sélection -->
+    <a href="index.html" id="homeButton" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
   </div>
   
   <script>
@@ -185,7 +209,7 @@
     const pipeImg = new Image();
     pipeImg.src = "assets/pype.png";
     
-    // Calcul de la position de départ de l'oiseau en fonction de la largeur de l'écran
+    // Position de départ de l'oiseau
     const birdStartX = window.innerWidth > 1024 ? canvas.width * 0.6 : canvas.width / 4;
     
     // Propriétés du "bird"
@@ -257,22 +281,17 @@
     });
     startButton.addEventListener("click", function() {
       bgMusic.play();
-      // Met à jour l'image utilisée pour l'oiseau selon la sélection
+      // Met à jour l'image de l'oiseau selon la sélection
       donaldImg.src = headImages[selectedHeadIndex];
       headSelectionContainer.style.display = "none";
       startTransition();
     });
     
-    // Bouton "Recommencer" affiché en cas de défaite
-    const restartButton = document.getElementById("restartButton");
-    restartButton.addEventListener("click", function() {
+    // Bouton "Retour au menu" (affiché en GAMEOVER)
+    const menuButton = document.getElementById("menuButton");
+    menuButton.addEventListener("click", function() {
+      // Réinitialise pour afficher l'interface de sélection
       restartGame();
-    });
-    
-    // Bouton "Retour" (en bas à gauche)
-    const homeLink = document.getElementById("homeLink");
-    homeLink.addEventListener("click", function() {
-      bgMusic.pause();
     });
     
     function startTransition() {
@@ -280,7 +299,7 @@
       transitionTimer = 0;
     }
     
-    // Redémarrage du jeu : affiche le menu de sélection (choix des têtes)
+    // Fonction de réinitialisation : affiche le menu de sélection
     function restartGame() {
       gameState = STATE.START;
       bird.y = canvas.height / 2;
@@ -290,14 +309,10 @@
       autoJumpCount = 0;
       autoJumpTimer = 0;
       lastPipeTime = 0;
-      homeLink.style.top = "";
-      homeLink.style.bottom = "20px";
-      restartButton.style.top = "";
-      restartButton.style.bottom = "20px";
-      // Affiche "Retour" et le menu de sélection
-      homeLink.style.display = "block";
+      // Affiche l'interface de sélection
       headSelectionContainer.style.display = "block";
-      restartButton.style.display = "none";
+      // Affiche le bouton "Retour au menu" uniquement en GAMEOVER, donc on le cache ici
+      menuButton.style.display = "none";
     }
     
     let lastTime = 0;
@@ -312,16 +327,15 @@
         ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
       }
       
+      // Gestion de l'affichage des boutons en fonction de l'état
       if (gameState === STATE.START) {
-        homeLink.style.display = "block";
-        restartButton.style.display = "none";
-        // L'interface de sélection reste affichée
+        // Sur l'écran de sélection, l'interface headSelectionContainer est visible
       } else if (gameState === STATE.GAMEOVER) {
-        homeLink.style.display = "block";
-        restartButton.style.display = "block";
+        // Masquer l'interface de sélection s'il est visible et afficher le bouton "Retour au menu"
+        headSelectionContainer.style.display = "none";
+        menuButton.style.display = "block";
       } else {
-        homeLink.style.display = "none";
-        restartButton.style.display = "none";
+        menuButton.style.display = "none";
       }
       
       if (gameState === STATE.START) {
