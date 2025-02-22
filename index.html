@@ -68,10 +68,12 @@
       .gif-background {
         width: 100vw !important;
         height: 100vh !important;
-        object-fit: cover;
+        min-width: 100vw;
+        min-height: 100vh;
+        object-fit: cover !important;
       }
     }
-
+    
     .password-container {
       position: fixed;
       bottom: 5%;
