@@ -102,11 +102,4 @@ body {
   .password-container button {
     font-size: 1rem;
   }
-  
-  /* Adaptation du GIF pour petit écran */
-  .gif-background {
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-  }
 }
