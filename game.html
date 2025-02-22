@@ -2,9 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <!-- Ajout du meta viewport pour une adaptation mobile -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Titre éditable -->
   <title data-sb-field="gamePageTitle">Flappy Trump</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -19,9 +17,9 @@
     canvas {
       display: block;
     }
-    /* Bouton "Retour à l'accueil" (visible uniquement sur l'écran de sélection) */
+    /* Bouton "Retour à l'accueil" (écran de sélection) */
     #homeLink {
-      font-family: 'Press Start 2P', cursive;
+      font-family: inherit;
       color: #00FF00;
       text-decoration: none;
       background: transparent;
@@ -38,9 +36,9 @@
       background: #00FF00;
       color: black;
     }
-    /* Bouton "Retour au menu" (affiché en GAMEOVER) */
+    /* Bouton "Retour au menu" (GAMEOVER) */
     #menuButton {
-      font-family: 'Press Start 2P', cursive;
+      font-family: inherit;
       color: #00FF00;
       text-decoration: none;
       background: transparent;
@@ -67,7 +65,6 @@
       text-align: center;
       z-index: 10;
     }
-    /* Conteneur flex pour les flèches et l'image */
     #headSelector {
       display: flex;
       align-items: center;
@@ -75,7 +72,6 @@
       width: 300px;
       margin: 0 auto;
     }
-    /* Flèches rétro sans gros cadre */
     #headSelector button {
       font-size: 3rem;
       background: transparent;
@@ -93,9 +89,8 @@
       width: 100px;
       height: 100px;
     }
-    /* Bouton "Commencer" dans l'écran de sélection */
     #headSelectionContainer #startButton {
-      font-family: 'Press Start 2P', cursive;
+      font-family: inherit;
       color: #00FF00;
       background: transparent;
       border: 2px solid #00FF00;
@@ -134,20 +129,16 @@
   </style>
 </head>
 <body>
-  <!-- Élément caché pour la configuration éditable du jeu -->
+  <!-- Configuration cachée -->
   <div id="gameConfig" style="display: none;" data-sb-field="gameConfig">
     <span id="startText" data-sb-field="gameStartText">Commencer</span>
   </div>
 
-  <!-- Le canvas pour le jeu -->
   <canvas id="gameCanvas"></canvas>
-
-  <!-- Bouton "Retour à l'accueil" qui arrête la musique et renvoie vers index.html -->
+  <!-- Bouton "Retour à l'accueil" -->
   <a href="index.html" id="homeLink" data-sb-field="gameHomeButtonText">Retour à l'accueil</a>
-  
-  <!-- Bouton "Retour au menu" affiché en GAMEOVER -->
+  <!-- Bouton "Retour au menu" (GAMEOVER) -->
   <button id="menuButton" data-sb-field="gameRestartButtonText">Retour au menu</button>
-  
   <!-- Interface de sélection de tête -->
   <div id="headSelectionContainer">
     <div id="headSelector">
@@ -157,19 +148,17 @@
     </div>
     <button id="startButton">Commencer</button>
   </div>
-  
+
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Musique de fond
     const bgMusic = new Audio("assets/flappy.mp3");
     bgMusic.loop = true;
     bgMusic.volume = 0.5;
     
-    // États du jeu
     const STATE = {
       START: 'start',
       TRANSITION: 'transition',
@@ -179,12 +168,8 @@
     };
     let gameState = STATE.START;
     
-    // Suivi de la souris
-    let mouseX = 0, mouseY = 0;
-    canvas.addEventListener("mousemove", function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+    // Pour la rotation progressive, on introduit une variable qui garde l'angle courant (en radians)
+    let currentAngle = 0;
     
     // Événement tactile pour mobile
     canvas.addEventListener("touchstart", function(e) {
@@ -196,22 +181,14 @@
       }
     });
     
-    // Chargement de l'image "donald" (sera mise à jour lors de la sélection)
     const donaldImg = new Image();
     donaldImg.src = "assets/donald.jpg";
-
-    // Chargement de l'image de fond
     const backgroundImg = new Image();
     backgroundImg.src = "assets/flappyfond.jpg";
-
-    // Chargement de l'image du tuyau
     const pipeImg = new Image();
     pipeImg.src = "assets/pype.png";
     
-    // Position de départ de l'oiseau
     const birdStartX = window.innerWidth > 1024 ? canvas.width * 0.6 : canvas.width / 4;
-    
-    // Propriétés du "bird"
     const bird = {
       x: birdStartX,
       y: canvas.height / 2,
@@ -222,52 +199,35 @@
       jumpStrength: -10
     };
     
-    let gapHeight = 200;
+    const gapHeight = 200;
     const pipeWidth = 80;
     let pipeInterval = window.innerWidth < 768 ? 1900 : 1800;
-    let lastPipeTime = 0;
-    
-    // Score
-    let score = 0;
-    
-    // Variables pour l'auto-jump
-    let autoJumpCount = 0;
-    let autoJumpTimer = 0;
-    
-    // Timer de transition
-    let transitionTimer = 0;
+    let lastPipeTime = 0, score = 0;
+    let autoJumpCount = 0, autoJumpTimer = 0, transitionTimer = 0;
     
     function spawnPipe() {
-      let gapPosition = Math.random() * (canvas.height - gapHeight - 200) + 100;
-      let topHeight = gapPosition;
-      let bottomHeight = canvas.height - gapPosition - gapHeight;
-      pipes.push({ x: canvas.width, top: topHeight, bottom: bottomHeight, passed: false });
+      let gapPos = Math.random() * (canvas.height - gapHeight - 200) + 100;
+      pipes.push({ x: canvas.width, top: gapPos, bottom: canvas.height - gapPos - gapHeight, passed: false });
     }
-    
     let pipes = [];
     
     document.addEventListener("keydown", function(e) {
-      if (e.code === "Space") {
+      if (e.code === "Space" && gameState === STATE.PLAYING) {
         e.preventDefault();
-        if (gameState === STATE.PLAYING) {
-          bird.velocity = bird.jumpStrength;
-        }
-      }
-    });
-    
-    canvas.addEventListener("click", function() {
-      if (gameState === STATE.PLAYING) {
         bird.velocity = bird.jumpStrength;
       }
     });
     
-    // Interface de sélection de tête
+    canvas.addEventListener("click", function() {
+      if (gameState === STATE.PLAYING) bird.velocity = bird.jumpStrength;
+    });
+    
+    // Sélection de tête
     const headSelectionContainer = document.getElementById("headSelectionContainer");
     const leftArrow = document.getElementById("leftArrow");
     const rightArrow = document.getElementById("rightArrow");
     const headImage = document.getElementById("headImage");
     const startButton = document.getElementById("startButton");
-    // Modification du tableau : suppression de "assets/donald2.jpg" et ajout des nouvelles images
     const headImages = [
       "assets/donald.jpg",
       "assets/mehdi.png",
@@ -278,30 +238,25 @@
     ];
     let selectedHeadIndex = 0;
     
-    leftArrow.addEventListener("click", function() {
+    leftArrow.addEventListener("click", () => {
       selectedHeadIndex = (selectedHeadIndex - 1 + headImages.length) % headImages.length;
       headImage.src = headImages[selectedHeadIndex];
     });
-    rightArrow.addEventListener("click", function() {
+    rightArrow.addEventListener("click", () => {
       selectedHeadIndex = (selectedHeadIndex + 1) % headImages.length;
       headImage.src = headImages[selectedHeadIndex];
     });
-    startButton.addEventListener("click", function() {
+    startButton.addEventListener("click", () => {
       bgMusic.play();
-      // Cache l'interface de sélection et le bouton "Retour à l'accueil" dès qu'on démarre
       donaldImg.src = headImages[selectedHeadIndex];
       headSelectionContainer.style.display = "none";
       homeLink.style.display = "none";
       startTransition();
     });
     
-    // Bouton "Retour au menu" (affiché en GAMEOVER)
     const menuButton = document.getElementById("menuButton");
-    menuButton.addEventListener("click", function() {
-      restartGame();
-    });
+    menuButton.addEventListener("click", restartGame);
     
-    // Ajout d'un écouteur sur "Retour à l'accueil" pour arrêter la musique
     homeLink.addEventListener("click", function(e) {
       e.preventDefault();
       bgMusic.pause();
@@ -314,7 +269,6 @@
       transitionTimer = 0;
     }
     
-    // Réinitialisation : réaffiche l'écran de sélection et le bouton "Retour à l'accueil"
     function restartGame() {
       gameState = STATE.START;
       bird.y = canvas.height / 2;
@@ -329,9 +283,8 @@
       menuButton.style.display = "none";
     }
     
-    let lastTime = 0;
     function gameLoop(timestamp) {
-      let deltaTime = timestamp - lastTime;
+      const deltaTime = timestamp - lastTime;
       lastTime = timestamp;
       
       if (gameState === STATE.START || gameState === STATE.GAMEOVER) {
@@ -341,23 +294,17 @@
         ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
       }
       
-      // Gestion de l'affichage des boutons en fonction de l'état
-      if (gameState === STATE.START) {
-        // L'écran de sélection est visible, homeLink est affiché
-      } else if (gameState === STATE.GAMEOVER) {
+      if (gameState === STATE.GAMEOVER) {
         headSelectionContainer.style.display = "none";
         menuButton.style.display = "block";
-      } else {
+      } else if (gameState !== STATE.START) {
         homeLink.style.display = "none";
         menuButton.style.display = "none";
       }
       
-      if (gameState === STATE.START) {
-        // L'interface de sélection est gérée par le HTML.
-      } else if (gameState === STATE.TRANSITION) {
+      if (gameState === STATE.TRANSITION) {
         transitionTimer += deltaTime;
-        let alpha = Math.min(1, transitionTimer / 500);
-        ctx.fillStyle = "rgba(0, 0, 0," + alpha + ")";
+        ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(1, transitionTimer / 500)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         if (transitionTimer >= 500) {
           gameState = STATE.AUTO_JUMP;
@@ -376,34 +323,36 @@
         }
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
-        ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
+        // Mise à jour progressive de la rotation
+        let targetAngle = bird.velocity > 0 ? 120 * Math.PI / 180 : 0;
+        currentAngle += (targetAngle - currentAngle) * 0.05;
+        ctx.save();
+        ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
+        ctx.rotate(currentAngle);
+        ctx.drawImage(donaldImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+        ctx.restore();
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
       } else if (gameState === STATE.PLAYING) {
-        if (pipes.length === 0) {
+        if (!pipes.length) {
           spawnPipe();
           lastPipeTime = timestamp;
         }
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
-        
         if (timestamp - lastPipeTime > pipeInterval) {
           spawnPipe();
           lastPipeTime = timestamp;
         }
-        
         pipes.forEach(pipe => {
           pipe.x -= 2;
-          if (checkCollision(bird, pipe)) {
-            gameState = STATE.GAMEOVER;
-          }
+          if (checkCollision(bird, pipe)) gameState = STATE.GAMEOVER;
           if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
             score += 50;
             pipe.passed = true;
           }
-          
           ctx.save();
           ctx.translate(pipe.x, pipe.top);
           ctx.scale(1, -1);
@@ -412,52 +361,45 @@
           ctx.drawImage(pipeImg, pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
         });
         pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
-        
-        ctx.drawImage(donaldImg, bird.x, bird.y, bird.width, bird.height);
+        // Mise à jour progressive de la rotation pour l'oiseau
+        let targetAngle = bird.velocity > 0 ? 120 * Math.PI / 180 : 0;
+        currentAngle += (targetAngle - currentAngle) * 0.05;
+        ctx.save();
+        ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
+        ctx.rotate(currentAngle);
+        ctx.drawImage(donaldImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+        ctx.restore();
         ctx.fillStyle = "#00FF00";
         ctx.font = "20px 'Press Start 2P'";
         ctx.textAlign = "left";
         ctx.fillText(score, 20, 40);
-        
-        if (bird.y + bird.height > canvas.height) {
-          gameState = STATE.GAMEOVER;
-        }
+        if (bird.y + bird.height > canvas.height) gameState = STATE.GAMEOVER;
       } else if (gameState === STATE.GAMEOVER) {
-        if (canvas.width < 768) {
-          ctx.fillStyle = "#00FF00";
-          ctx.font = "40px 'Press Start 2P'";
-          ctx.textAlign = "center";
-          ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
-          ctx.font = "30px 'Press Start 2P'";
-          ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 40);
-        } else {
-          ctx.fillStyle = "#00FF00";
-          ctx.font = "60px 'Press Start 2P'";
-          ctx.textAlign = "center";
-          ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
-          ctx.font = "40px 'Press Start 2P'";
-          ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + 60);
-        }
+        ctx.fillStyle = "#00FF00";
+        ctx.font = canvas.width < 768 ? "40px 'Press Start 2P'" : "60px 'Press Start 2P'";
+        ctx.textAlign = "center";
+        ctx.fillText("T'AS PERDU", canvas.width / 2, canvas.height / 2);
+        ctx.font = canvas.width < 768 ? "30px 'Press Start 2P'" : "40px 'Press Start 2P'";
+        ctx.fillText("Score : " + score, canvas.width / 2, canvas.height / 2 + (canvas.width < 768 ? 40 : 60));
       }
       
       requestAnimationFrame(gameLoop);
     }
+    let lastTime = 0;
     requestAnimationFrame(gameLoop);
     
     window.addEventListener('resize', function() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      gapHeight = 200;
       pipeInterval = window.innerWidth < 768 ? 1900 : 1800;
     });
     
     function checkCollision(bird, pipe) {
-      let tx = pipe.x, ty = 0, tw = pipeWidth, th = pipe.top;
-      let bx_pipe = pipe.x, by_pipe = canvas.height - pipe.bottom, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
-      let bx = bird.x, by = bird.y, bw = bird.width, bh = bird.height;
-      if (bx < tx + tw && bx + bw > tx && by < ty + th && by + bh > ty) return true;
-      if (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < by_pipe + bh_pipe && by + bh > by_pipe) return true;
-      return false;
+      const tx = pipe.x, tw = pipeWidth, th = pipe.top;
+      const bx_pipe = pipe.x, bw_pipe = pipeWidth, bh_pipe = pipe.bottom;
+      const { x: bx, y: by, width: bw, height: bh } = bird;
+      return (bx < tx + tw && bx + bw > tx && by < th && by + bh > 0) ||
+             (bx < bx_pipe + bw_pipe && bx + bw > bx_pipe && by < canvas.height - pipe.bottom + bh_pipe && by + bh > canvas.height - pipe.bottom);
     }
   </script>
 </body>
