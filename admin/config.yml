@@ -1,0 +1,28 @@
+backend:
+  name: git-gateway
+  branch: main  # Change si ta branche est "master"
+
+media_folder: "assets/uploads"  # Dossier où seront stockées les images
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "pages"
+    label: "Pages"
+    files:
+      - name: "home"
+        label: "Page d'accueil"
+        file: "index.html"
+        fields:
+          - { label: "Titre", name: "title", widget: "string" }
+          - { label: "Contenu", name: "body", widget: "markdown" }
+
+  - name: "products"
+    label: "Produits"
+    folder: "products"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nom", name: "title", widget: "string" }
+      - { label: "Prix", name: "price", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Description", name: "body", widget: "markdown" }
