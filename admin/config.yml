@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: main  # Remplace par "master" si ta branche principale s'appelle "master"
+  branch: preview  # Remplace par "master" si ta branche principale s'appelle "master"
 
 media_folder: "assets/uploads"  # Où Netlify CMS stocke les images
 public_folder: "/assets/uploads"
