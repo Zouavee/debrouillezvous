@@ -7,16 +7,14 @@
     <script src="https://unpkg.com/netlify-cms-app/dist/netlify-cms-app.js"></script>
 </head>
 <body>
+    <h1>Chargement de Netlify CMS...</h1>
     <script>
-        window.onload = () => {
-            console.log("Netlify CMS essaie de se charger...");
-            try {
-                NetlifyCmsApp.init();
-                console.log("Netlify CMS chargé avec succès !");
-            } catch (error) {
-                console.error("Erreur de chargement de Netlify CMS :", error);
-            }
-        };
+        if (typeof NetlifyCmsApp !== "undefined") {
+            NetlifyCmsApp.init();
+            console.log("✅ Netlify CMS chargé avec succès !");
+        } else {
+            console.error("❌ Erreur : Netlify CMS ne s'est pas chargé.");
+        }
     </script>
 </body>
 </html>

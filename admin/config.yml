@@ -1,8 +1,8 @@
 backend:
   name: git-gateway
-  branch: main  # Change par "main" si ta branche principale est "main"
+  branch: main  # On utilise "main" car "preview" ne fonctionne pas
 
-media_folder: "assets/uploads"  # Où seront stockées les images
+media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
 collections:
