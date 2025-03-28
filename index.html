@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/turbolinks"></script>
   <script>Turbolinks.start();</script>
+
   <script>
     (function(){
       const urlParams = new URLSearchParams(window.location.search);
@@ -21,11 +22,13 @@
       }
     })();
   </script>
+
   <style>
     .authenticated #splash { display: none !important; }
     .authenticated #home { display: flex !important; }
 
     *, *::before, *::after { box-sizing: border-box; }
+
     body {
       margin: 0;
       padding: 0;
@@ -49,16 +52,6 @@
       height: 100%;
       object-fit: cover;
       z-index: -2;
-    }
-
-    @media (max-width: 768px) {
-      .gif-background {
-        width: 100vw !important;
-        height: 100vh !important;
-        max-width: 100vw !important;
-        max-height: 100vh !important;
-        object-fit: cover !important;
-      }
     }
 
     .password-container {
@@ -117,7 +110,6 @@
       height: 100vh;
       background: url('assets/fondhome.jpg') no-repeat center center fixed;
       background-size: cover;
-      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -165,10 +157,7 @@
       transform: scale(1.1);
     }
 
-    #gameButton {
-      position: static;
-    }
-
+    /* Bouton game en bas à droite pour grands écrans */
     @media (min-width: 1025px) {
       #gameButton {
         position: fixed;
@@ -195,15 +184,21 @@
       .clignotant {
         font-size: 1.5rem;
       }
+
+      #gameButton {
+        position: static;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Musique -->
   <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
     <source src="assets/musique.mp3" type="audio/mp3">
     Votre navigateur ne supporte pas la lecture de fichiers audio.
   </audio>
 
+  <!-- Splash avec mot de passe -->
   <div id="splash" data-sb-field="splash">
     <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background" data-sb-field="splashBackground">
     <div class="password-container" data-sb-field="passwordContainer">
@@ -214,6 +209,7 @@
     <div class="blackout" id="blackout" data-sb-field="blackout"></div>
   </div>
 
+  <!-- Page d'accueil (HOME) -->
   <div id="home" data-sb-field="home">
     <div class="container" data-sb-field="homeContainer">
       <div class="clignotant" data-sb-field="homeBlinkingText">
@@ -225,9 +221,10 @@
       <a href="contact.html" class="enter-button" id="contactButton" data-sb-field="contactButtonText">Contactez-nous</a>
       <a href="game.html" class="enter-button" id="gameButton" data-sb-field="gameButtonText">Make Tours Great Again</a>
     </div>
+  </div>
 
   <script>
-    document.addEventListener("turbolinks:load", function() {
+    document.addEventListener("turbolinks:load", function () {
       const urlParams = new URLSearchParams(window.location.search);
       const autoAuth = urlParams.get("auth");
 
@@ -237,10 +234,11 @@
         const home = document.getElementById('home');
         if (splash) splash.style.display = 'none';
         if (home) home.style.display = 'flex';
+
         const audio = document.getElementById('backgroundMusic');
         if (audio) {
           audio.muted = false;
-          audio.play().catch(function (error) {
+          audio.play().catch(error => {
             console.error("Erreur audio :", error);
           });
         }
@@ -252,12 +250,12 @@
       const audio = document.getElementById('backgroundMusic');
       if (audio) {
         audio.muted = false;
-        audio.play().catch(function(error) {
-          console.error("Erreur lors de la lecture de l'audio :", error);
+        audio.play().catch(error => {
+          console.error("Erreur audio :", error);
         });
       }
       sessionStorage.setItem('auth', 'true');
-      setTimeout(function() {
+      setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
         document.getElementById('home').style.display = 'flex';
       }, 2000);
