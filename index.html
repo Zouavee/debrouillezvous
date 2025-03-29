@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/turbolinks"></script>
   <script>Turbolinks.start();</script>
-
   <script>
     (function(){
       const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +21,6 @@
       }
     })();
   </script>
-
   <style>
     .authenticated #splash { display: none !important; }
     .authenticated #home { display: flex !important; }
@@ -157,7 +155,6 @@
       transform: scale(1.1);
     }
 
-    /* Bouton game en bas à droite pour grands écrans */
     @media (min-width: 1025px) {
       #gameButton {
         position: fixed;
@@ -189,16 +186,30 @@
         position: static;
       }
     }
+
+    /* Style pour la vidéo de transition */
+    #transitionVideo {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 9999;
+      background: black;
+    }
   </style>
 </head>
 <body>
-  <!-- Musique -->
   <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
     <source src="assets/musique.mp3" type="audio/mp3">
     Votre navigateur ne supporte pas la lecture de fichiers audio.
   </audio>
 
-  <!-- Splash avec mot de passe -->
+  <!-- Vidéo de transition -->
+  <video id="transitionVideo" src="assets/attaque.mp4" preload="auto"></video>
+
   <div id="splash" data-sb-field="splash">
     <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background" data-sb-field="splashBackground">
     <div class="password-container" data-sb-field="passwordContainer">
@@ -209,17 +220,16 @@
     <div class="blackout" id="blackout" data-sb-field="blackout"></div>
   </div>
 
-  <!-- Page d'accueil (HOME) -->
   <div id="home" data-sb-field="home">
     <div class="container" data-sb-field="homeContainer">
       <div class="clignotant" data-sb-field="homeBlinkingText">
         Article 15 : Débrouillez-vous pour survivre
       </div>
-      <a href="about.html" class="enter-button" id="aboutButton" data-sb-field="aboutButtonText">À propos</a>
-      <a href="media.html" class="enter-button" id="mediaButton" data-sb-field="mediaButtonText">Médias</a>
-      <a href="shop.html" class="enter-button" id="agendaButton" data-sb-field="agendaButtonText">Agenda</a>
-      <a href="contact.html" class="enter-button" id="contactButton" data-sb-field="contactButtonText">Contactez-nous</a>
-      <a href="game.html" class="enter-button" id="gameButton" data-sb-field="gameButtonText">Make Tours Great Again</a>
+      <a href="about.html" class="enter-button nav-link" id="aboutButton">À propos</a>
+      <a href="media.html" class="enter-button nav-link" id="mediaButton">Médias</a>
+      <a href="shop.html" class="enter-button nav-link" id="agendaButton">Agenda</a>
+      <a href="contact.html" class="enter-button nav-link" id="contactButton">Contactez-nous</a>
+      <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a>
     </div>
   </div>
 
@@ -230,17 +240,12 @@
 
       if (autoAuth === "true" || sessionStorage.getItem('auth') === 'true') {
         sessionStorage.setItem('auth', 'true');
-        const splash = document.getElementById('splash');
-        const home = document.getElementById('home');
-        if (splash) splash.style.display = 'none';
-        if (home) home.style.display = 'flex';
-
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('home').style.display = 'flex';
         const audio = document.getElementById('backgroundMusic');
         if (audio) {
           audio.muted = false;
-          audio.play().catch(error => {
-            console.error("Erreur audio :", error);
-          });
+          audio.play().catch(err => console.error("Erreur audio :", err));
         }
       }
     });
@@ -250,9 +255,7 @@
       const audio = document.getElementById('backgroundMusic');
       if (audio) {
         audio.muted = false;
-        audio.play().catch(error => {
-          console.error("Erreur audio :", error);
-        });
+        audio.play().catch(err => console.error("Erreur audio :", err));
       }
       sessionStorage.setItem('auth', 'true');
       setTimeout(() => {
@@ -260,6 +263,20 @@
         document.getElementById('home').style.display = 'flex';
       }, 2000);
     }
+
+    // Transition vidéo
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('href');
+        const transition = document.getElementById('transitionVideo');
+        transition.style.display = 'block';
+        transition.play();
+        transition.onended = () => {
+          window.location.href = target;
+        };
+      });
+    });
   </script>
 </body>
 </html>
