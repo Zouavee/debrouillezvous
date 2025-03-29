@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/turbolinks"></script>
   <script>Turbolinks.start();</script>
+
   <script>
     (function(){
       const urlParams = new URLSearchParams(window.location.search);
@@ -21,6 +22,7 @@
       }
     })();
   </script>
+
   <style>
     .authenticated #splash { display: none !important; }
     .authenticated #home { display: flex !important; }
@@ -187,7 +189,7 @@
       }
     }
 
-    /* Style pour la vidéo de transition */
+    /* Vidéo de transition */
     #transitionVideo {
       display: none;
       position: fixed;
@@ -204,31 +206,28 @@
 <body>
   <audio id="backgroundMusic" autoplay loop muted data-turbolinks-permanent>
     <source src="assets/musique.mp3" type="audio/mp3">
-    Votre navigateur ne supporte pas la lecture de fichiers audio.
   </audio>
 
-  <!-- Vidéo de transition -->
-  <video id="transitionVideo" src="assets/attaque.mp4" preload="auto"></video>
+  <!-- Vidéo de transition (changée dynamiquement selon le bouton cliqué) -->
+  <video id="transitionVideo" preload="auto"></video>
 
-  <div id="splash" data-sb-field="splash">
-    <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background" data-sb-field="splashBackground">
-    <div class="password-container" data-sb-field="passwordContainer">
-      <label for="password" data-sb-field="passwordLabel">Mot de passe</label>
-      <input type="password" id="password" placeholder="Entrez le mot de passe" data-sb-field="passwordInput">
-      <button onclick="accessSite()" data-sb-field="passwordButton">Accéder</button>
+  <div id="splash">
+    <img src="assets/fondindex.gif" alt="Background GIF" class="gif-background">
+    <div class="password-container">
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" placeholder="Entrez le mot de passe">
+      <button onclick="accessSite()">Accéder</button>
     </div>
-    <div class="blackout" id="blackout" data-sb-field="blackout"></div>
+    <div class="blackout" id="blackout"></div>
   </div>
 
-  <div id="home" data-sb-field="home">
-    <div class="container" data-sb-field="homeContainer">
-      <div class="clignotant" data-sb-field="homeBlinkingText">
-        Article 15 : Débrouillez-vous pour survivre
-      </div>
-      <a href="about.html" class="enter-button nav-link" id="aboutButton">À propos</a>
-      <a href="media.html" class="enter-button nav-link" id="mediaButton">Médias</a>
-      <a href="shop.html" class="enter-button nav-link" id="agendaButton">Agenda</a>
-      <a href="contact.html" class="enter-button nav-link" id="contactButton">Contactez-nous</a>
+  <div id="home">
+    <div class="container">
+      <div class="clignotant">Article 15 : Débrouillez-vous pour survivre</div>
+      <a href="about.html" class="enter-button nav-link" data-video="assets/tentative1.mp4">À propos</a>
+      <a href="media.html" class="enter-button nav-link" data-video="assets/attaque.mp4">Médias</a>
+      <a href="shop.html" class="enter-button nav-link" data-video="assets/tentative3.mp4" data-stop-music="true">Agenda</a>
+      <a href="contact.html" class="enter-button nav-link" data-video="assets/tentative2.mp4">Contactez-nous</a>
       <a href="game.html" class="enter-button" id="gameButton">Make Tours Great Again</a>
     </div>
   </div>
@@ -264,16 +263,28 @@
       }, 2000);
     }
 
-    // Transition vidéo
+    // Transitions personnalisées
     document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', function (e) {
         e.preventDefault();
-        const target = this.getAttribute('href');
+        const targetUrl = this.getAttribute('href');
+        const videoSrc = this.getAttribute('data-video');
+        const stopMusic = this.getAttribute('data-stop-music') === 'true';
+
         const transition = document.getElementById('transitionVideo');
+        const audio = document.getElementById('backgroundMusic');
+
+        if (stopMusic && audio) {
+          audio.pause();
+        }
+
+        transition.src = videoSrc;
         transition.style.display = 'block';
         transition.play();
+
         transition.onended = () => {
-          Turbolinks.visit(target);
+          transition.style.display = 'none';
+          Turbolinks.visit(targetUrl);
         };
       });
     });
