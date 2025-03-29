@@ -273,7 +273,7 @@
         transition.style.display = 'block';
         transition.play();
         transition.onended = () => {
-          window.location.href = target;
+          Turbolinks.visit(target);
         };
       });
     });
